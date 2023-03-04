@@ -1,0 +1,96 @@
+﻿<Page x:Class="Write_Wash.Views.SignView"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+      DataContext="{Binding SignViewModel, Source={StaticResource ViewModelLocator}}"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      xmlns:local="clr-namespace:Write_Wash.Views"
+      mc:Ignorable="d" 
+      d:DesignHeight="450" d:DesignWidth="800"
+      Background="White">
+
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition></ColumnDefinition>
+            <ColumnDefinition></ColumnDefinition>
+            <ColumnDefinition></ColumnDefinition>
+        </Grid.ColumnDefinitions>
+
+        <Grid Grid.Column="1" VerticalAlignment="Center">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="auto"></RowDefinition>
+                <RowDefinition Height="auto"></RowDefinition>
+                <RowDefinition Height="auto"></RowDefinition>
+                <RowDefinition Height="auto"></RowDefinition>
+                <RowDefinition Height="auto"></RowDefinition>
+                <RowDefinition Height="auto"></RowDefinition>
+                <RowDefinition Height="auto"></RowDefinition>
+                <RowDefinition Height="auto"></RowDefinition>
+            </Grid.RowDefinitions>
+            <Image Grid.Row="0"
+                   Source="\Resources\Image\logo.png"
+                   Height="75"
+                   ></Image>
+            <TextBlock Grid.Row="1"
+                       Text="Войдите в свою учетную запись"
+                       HorizontalAlignment="Center"
+                       FontFamily="{StaticResource pwsFont}"
+                       Foreground="Black"></TextBlock>
+            <TextBox Grid.Row="2" x:Name="loginbox"
+                     Text="{Binding Username, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                     Style="{StaticResource pwsTextBox}"
+                     materialDesign:HintAssist.Hint="Логин"
+                     ></TextBox>
+            <PasswordBox Grid.Row="3" x:Name="passwordbox"
+                         Style="{StaticResource pwsPasswordBox}"
+                         materialDesign:PasswordBoxAssist.Password="{Binding Password, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                         materialDesign:HintAssist.Hint="Пароль"
+                         >
+            </PasswordBox>
+            <TextBlock Grid.Row="4"
+                       Style="{StaticResource pwsTextBlockError}"
+                       Text="{Binding ErrorMessage, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"></TextBlock>
+            <TextBlock Grid.Row="4"
+                       Style="{StaticResource pwsTextBlockError}"
+                       Text="{Binding ErrorMessage, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"></TextBlock>
+            <Button Grid.Row="5"
+                    Style="{StaticResource pwsButton}"
+                    Command="{Binding SignInCommand, IsAsync=True}"
+                    Content="Войти" ></Button>
+            <TextBlock Grid.Row="6"
+                       Foreground="Black"
+                       HorizontalAlignment="Center"
+                       Text="У вас нет учетной записи?"
+                       FontFamily="{StaticResource pwsFont}"
+                       Margin="0 10 0 0"
+                       ></TextBlock>
+            <StackPanel Grid.Row="7"
+                        Orientation="Horizontal"
+                        VerticalAlignment="Center"
+                        HorizontalAlignment="Center">
+                <Button Foreground="Black"
+                        Style="{StaticResource ButtonToText}"
+                        Command="{Binding SignCommand}"
+                        FontFamily="{StaticResource pwsFont}"
+                        Cursor="Hand">
+                    <Underline>Зарегистрироваться</Underline>
+                </Button>
+                <TextBlock Foreground="Black"
+                           FontFamily="Comic Sans MS"
+                           VerticalAlignment="Center"
+                           Text="или"></TextBlock>
+                <Button Foreground="Black"
+                        Style="{StaticResource ButtonToText}"
+                        Command="{Binding SignInLaterCommand}"
+                        FontFamily="{StaticResource pwsFont}"
+                        Cursor="Hand">
+                    <Underline>Войти позже</Underline>
+                </Button>
+
+            </StackPanel>
+        </Grid>
+
+
+    </Grid>
+</Page>
