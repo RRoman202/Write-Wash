@@ -33,6 +33,8 @@ namespace Write_Wash.ViewModels
 
         public Visibility NullProduct { get; set; }
 
+        public string FullName { get; set; } = Global.CurrentUser.Name == string.Empty ? "Гость" : $"{Global.CurrentUser.Surname} {Global.CurrentUser.Name} {Global.CurrentUser.Patronymic}";
+
         void Search(List<Product> prod)
         {
             try
@@ -205,6 +207,15 @@ namespace Write_Wash.ViewModels
                 }).WaitAsync(TimeSpan.FromMilliseconds(10));
                 
             }
-        } 
+        }
+        public DelegateCommand SignOutCommand => new(() =>
+        {
+            Global.CurrentUser.Id = 0;
+            Global.CurrentUser.Name = string.Empty;
+            Global.CurrentUser.Surname = string.Empty;
+            Global.CurrentUser.Patronymic = string.Empty;
+            Global.CurrentUser.Role = 0;
+            _pageService.ChangePage(new SignView());
+        });
     }
 }

@@ -71,7 +71,7 @@
                         HorizontalAlignment="Center">
                 <Button Foreground="Black"
                         Style="{StaticResource ButtonToText}"
-                        Command="{Binding SignCommand}"
+                        
                         FontFamily="{StaticResource pwsFont}"
                         Cursor="Hand">
                     <Underline>Зарегистрироваться</Underline>

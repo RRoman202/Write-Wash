@@ -8,10 +8,10 @@ namespace Write_Wash.Models
 {
     public class User
     {
-        public int UserId { get; set; }
-        public string UserSurName { get; set; }
-        public string UserName { get; set; }
-        public string UserPatronymic { get; set; }
-        public int UserRole { get; set; }
+        public int Id { get; set; }
+        public string Surname { get; set; }
+        public string Name { get; set; }
+        public string Patronymic { get; set; }
+        public int Role { get; set; }
     }
 }

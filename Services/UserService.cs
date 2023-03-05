@@ -23,14 +23,14 @@ namespace Write_Wash.Services
                 return false;
             if (user.UserPassword.Equals(password))
             {
-                //Global.CurrentUser = new User
-                //{
-                //    Id = user.UserID,
-                //    UserName = user.UserName,
-                //    UserSurname = user.UserSurname,
-                //    UserPatronymic = user.UserPatronymic,
-                //    UserRole = user.UserRole
-                //};
+                Global.CurrentUser = new User
+                {
+                    Id = user.UserId,
+                    Name = user.UserName,
+                    Surname = user.UserSurName,
+                    Patronymic = user.UserPatronymic,
+                    Role = user.UserRole
+                };
 
                 return true;
             }
