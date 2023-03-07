@@ -35,7 +35,7 @@ namespace Write_Wash.Services
                             Image = item.ProductPhoto == string.Empty ? "picture.png" : item.ProductPhoto,
                             Title = item.ProductName,
                             Description = item.ProductDescription,
-                            Manufacturer = "Производитель: " + pmanufactures.SingleOrDefault(pm => pm.idManufactures == item.ProductManufacturer).NameManufactures,
+                            Manufacturer = pmanufactures.SingleOrDefault(pm => pm.idManufactures == item.ProductManufacturer).NameManufactures,
                             Price = item.ProductCost,
                             Discount = item.CurrentDiscount
                         }); 

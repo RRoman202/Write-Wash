@@ -1,7 +1,7 @@
 ﻿<Application x:Class="Write_Wash.App"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:local="clr-namespace:Write_Wash"
+             xmlns:local="clr-namespace:Write_Wash" xmlns:converterts="clr-namespace:Write_Wash.Converters"
              StartupUri="Views/MainWindow.xaml">
     <Application.Resources>
         <ResourceDictionary>
@@ -12,9 +12,13 @@
                 <ResourceDictionary Source="pack://application:,,,/MaterialDesignColors;component/Themes/Recommended/Accent/MaterialDesignColor.Lime.xaml" />
             </ResourceDictionary.MergedDictionaries>
             <local:ViewModelLocator x:Key="ViewModelLocator"/>
+            <converterts:StringToBrushConverter x:Key="StringToBrushConverter"/>
+            <converterts:ValueToTextDecorationsConverter x:Key="ValueToTextDecorationsConverter"/>
             <Color x:Key="pwsPrimaryColor">#ffffff</Color>
             <Color x:Key="pwsSecondaryColor">#76e383</Color>
             <Color x:Key="pwsAccentedColor">#498c51</Color>
+
+            <Color x:Key="pwsDiscountColor">#7fff00</Color>
 
             <SolidColorBrush x:Key="pwsPrimaryBg" Color="{StaticResource pwsPrimaryColor}"></SolidColorBrush>
             <SolidColorBrush x:Key="pwsSecondaryBg" Color="{StaticResource pwsSecondaryColor}"></SolidColorBrush>

@@ -1,4 +1,6 @@
-﻿using Microsoft.VisualBasic;
+﻿using DevExpress.Mvvm.UI.Native;
+using MaterialDesignThemes.Wpf;
+using Microsoft.VisualBasic;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -12,6 +14,16 @@ using System.Windows;
 using System.Windows.Controls.Primitives;
 using System.Windows.Data;
 using Write_Wash.Models;
+using System;
+using System.Collections.ObjectModel;
+using System.ComponentModel;
+using System.Windows;
+using System.Windows.Controls;
+using System.Reflection;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.EntityFrameworkCore.Query.Internal;
+using Write_Wash.Services;
+using MaterialDesignColors;
 
 namespace Write_Wash.ViewModels
 {
@@ -35,46 +47,8 @@ namespace Write_Wash.ViewModels
 
         public string FullName { get; set; } = Global.CurrentUser.Name == string.Empty ? "Гость" : $"{Global.CurrentUser.Surname} {Global.CurrentUser.Name} {Global.CurrentUser.Patronymic}";
 
-        void Search(List<Product> prod)
-        {
-            try
-            {
-                if(Pattern != null && Pattern != "")
-                {
-                    List<Product> searchproducts = new List<Product>();
-                    Regex regex = new Regex(Pattern.Trim(), RegexOptions.IgnoreCase);
-                    foreach (Product p in prod)
-                    {
-                        MatchCollection matches = regex.Matches(p.Title);
-                        if (matches.Count() > 0)
-                        {
-                            searchproducts.Add(p);
-                        }
-                    }
-                    Products = searchproducts;
-                    CurrentProd = Products.Count();
-                }
-                
-            }
-            catch { }
-        }
-        public string Pattern
-        {
-            get { return _pattern; }
-            set
-            {
-                _pattern = value;
-                RaisePropertyChanged(nameof(Pattern));
-                Task.Run(async () =>
-                {
-                    Products = await _productService.GetProducts();
-                    Search(Products);
-                    Sort(Products);
-                    FiltreProduct(Products);
-                }).WaitAsync(TimeSpan.FromMilliseconds(10));
-                
-            }
-        }
+        public Visibility BasketVisible { get; set; } = Global.CurrentUser.Name == string.Empty ? Visibility.Collapsed : Visibility.Visible;
+
         public BrowseProductViewModel(PageService pageService, ProductService productService)
         {
             _pageService = pageService;
@@ -99,94 +73,43 @@ namespace Write_Wash.ViewModels
                 new string("10 - 14,99%"),
                 new string("15% и более")
             };
-            SelectedFiltre = Filtre[0];
             
+
         }
+
         void CheckNullProduct()
         {
-            if(CurrentProd > 0)
+            if (CurrentProd > 0)
             {
                 NullProduct = Visibility.Hidden;
             }
-            if(CurrentProd == 0)
+            if (CurrentProd == 0)
             {
                 NullProduct = Visibility.Visible;
             }
         }
-        private string _SelectedSort { get; set; }
-        void Sort(List<Product> prod)
-        {
-            CollectionView view = (CollectionView)CollectionViewSource.GetDefaultView(prod);
-            if (_SelectedSort == "По возрастанию")
-            {
-                view.SortDescriptions.Add(new SortDescription("Price", ListSortDirection.Ascending));
-            }
-            if (_SelectedSort == "По убыванию")
-            {
-                view.SortDescriptions.Add(new SortDescription("Price", ListSortDirection.Descending));
-            }
-            Products = view.Cast<Product>().ToList();
-            CurrentProd = Products.Count();
-            
 
-        }
-        void FiltreProduct(List<Product> prod)
+        public string Pattern
         {
-            List<Product> prodfiltre = new List<Product>();
-            if(_SelectedFiltre == "0 - 9,99%")
+            get { return _pattern; }
+            set
             {
-                foreach (Product product in prod)
-                {
-                    if (product.Discount >= 0 && product.Discount <= 9.99)
-                    {
-                        prodfiltre.Add(product);
-                    }
-                }
+                _pattern = value;
+                RaisePropertyChanged(nameof(Pattern));
+                UpdateProduct();
             }
-            if (_SelectedFiltre == "10 - 14,99%")
-            {
-                foreach (Product product in prod)
-                {
-                    if (product.Discount >= 10 && product.Discount <= 14.99)
-                    {
-                        prodfiltre.Add(product);
-                    }
-                }
-            }
-            if (_SelectedFiltre == "15% и более")
-            {
-                foreach (Product product in prod)
-                {
-                    if (product.Discount >= 15)
-                    {
-                        prodfiltre.Add(product);
-                    }
-                }
-            }
-            if(_SelectedFiltre == "Все диапозоны")
-            {
-                prodfiltre = prod;
-            }
-            Products = prodfiltre;
-            CurrentProd = Products.Count();
-            CheckNullProduct();
         }
+        private string _SelectedSort { get; set; }
+
         public string SelectedSort
         {
             get { return _SelectedSort; }
-            set {
+            set
+            {
                 _SelectedSort = value;
                 RaisePropertyChanged(nameof(SelectedSort));
-                Task.Run(async () =>
-                {
-                    Products = await _productService.GetProducts();
-                    Search(Products);
-                    Sort(Products);
-                    FiltreProduct(Products);
-                }).WaitAsync(TimeSpan.FromMilliseconds(10));
-                
+                UpdateProduct();
             }
-            
         }
         private string _SelectedFiltre { get; set; }
         public string SelectedFiltre
@@ -196,17 +119,48 @@ namespace Write_Wash.ViewModels
             {
                 _SelectedFiltre = value;
                 RaisePropertyChanged(nameof(SelectedFiltre));
-                Task.Run(async () =>
-                {
-                    Products = await _productService.GetProducts();
-                    MaxProd = Products.Count();
-                    Search(Products);
-                    FiltreProduct(Products);
-                    Sort(Products);
-                    
-                }).WaitAsync(TimeSpan.FromMilliseconds(10));
-                
+                UpdateProduct();
+
             }
+        }
+        public async void UpdateProduct()
+        {
+            var currentProduct = await _productService.GetProducts();
+            MaxProd = currentProduct.Count;
+
+            if (!string.IsNullOrEmpty(SelectedFiltre))
+            {
+                switch (SelectedFiltre)
+                {
+                    case "0 - 9,99%":
+                        currentProduct = currentProduct.Where(p => p.Discount >= 0 && p.Discount < 10).ToList();
+                        break;
+                    case "10 - 14,99%":
+                        currentProduct = currentProduct.Where(p => p.Discount >= 10 && p.Discount < 15).ToList();
+                        break;
+                    case "15% и более":
+                        currentProduct = currentProduct.Where(p => p.Discount >= 15).ToList();
+                        break;
+                }
+            }
+            if (!string.IsNullOrEmpty(Pattern))
+                currentProduct = currentProduct.Where(p => p.Title.ToLower().Contains(Pattern.ToLower())).ToList();
+            if (!string.IsNullOrEmpty(SelectedSort))
+            {
+                switch (SelectedSort)
+                {
+                    case "По возрастанию":
+                        currentProduct = currentProduct.OrderBy(p => p.Price).ToList();
+                        break;
+                    case "По убыванию":
+                        currentProduct = currentProduct.OrderByDescending(p => p.Price).ToList();
+                        break;
+                }
+            }
+            CurrentProd = currentProduct.Count;
+            Products = currentProduct;
+            CheckNullProduct();
+
         }
         public DelegateCommand SignOutCommand => new(() =>
         {
@@ -216,6 +170,10 @@ namespace Write_Wash.ViewModels
             Global.CurrentUser.Patronymic = string.Empty;
             Global.CurrentUser.Role = 0;
             _pageService.ChangePage(new SignView());
+        });
+        public DelegateCommand BasketOpen => new(() =>
+        {
+
         });
     }
 }

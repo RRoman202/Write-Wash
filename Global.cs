@@ -9,6 +9,13 @@ namespace Write_Wash
 {
     public static class Global
     {
-        public static User CurrentUser { get; set; } = new User();
+        public static User CurrentUser { get; set; } = new User
+        {
+            Id = 0,
+            Name = string.Empty,
+            Surname = string.Empty,
+            Patronymic = string.Empty,
+            Role = 0
+        };
     }
 }

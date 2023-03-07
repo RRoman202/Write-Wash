@@ -85,6 +85,9 @@
                     </MenuItem>
                     <Separator Style="{StaticResource MaterialDesignLightSeparator}"
                                Margin="10 0 10 0"></Separator>
+                    <MenuItem Header="Корзина" Visibility="{Binding BasketVisible}"
+                              Command="{Binding BasketOpen}"
+                              FontSize="14"></MenuItem>
                     <MenuItem Header="Выйти"
                               Command="{Binding SignOutCommand}"
                               FontSize="14">
@@ -130,11 +133,20 @@
 
                 <ListBox.ItemTemplate>
                     <DataTemplate>
-                        <materialDesign:Card Background="{StaticResource pwsSecondaryBg}"
+                        <materialDesign:Card Background="{Binding Discount, Converter={StaticResource StringToBrushConverter}}"
                                              Padding="8"
                                              HorizontalContentAlignment="Stretch"
                                              HorizontalAlignment="Stretch"
+                                             
                                              >
+                            <materialDesign:Card.ContextMenu>
+                                <ContextMenu>
+                                    <MenuItem Header="Добавить к заказу"
+                                              FontFamily="{StaticResource pwsFont}"
+                                              Foreground="{StaticResource pwsAccentedBg}"
+                                              Command="{Binding AddToOrder}"></MenuItem>
+                                </ContextMenu>
+                            </materialDesign:Card.ContextMenu>
                             <Grid HorizontalAlignment="Stretch"
                                   VerticalAlignment="Center">
                                 <Grid.ColumnDefinitions>
@@ -142,6 +154,7 @@
                                     <ColumnDefinition Width="3*"></ColumnDefinition>
                                     <ColumnDefinition Width="*"></ColumnDefinition>
                                 </Grid.ColumnDefinitions>
+                                
                                 <Border Grid.Column="0" 
                                         VerticalAlignment="Center" 
                                         HorizontalAlignment="Center"
@@ -179,7 +192,8 @@
                                     <WrapPanel Grid.Row="3">
                                         <TextBlock Text="Цена: "></TextBlock>
                                         <TextBlock Grid.Row="3"
-                                               Text="{Binding Price}"></TextBlock>
+                                               Text="{Binding Price, StringFormat={}{0:C}, ConverterCulture=ru-RU}" TextDecorations="{Binding Discount, Converter={StaticResource ValueToTextDecorationsConverter}}"></TextBlock>
+                                        <TextBlock Text="{Binding DisplayedPrice, StringFormat={}{0:C}, ConverterCulture=ru-RU, Mode=OneWay}" Margin="10 0 0 0"></TextBlock>
                                     </WrapPanel>
                                     
                                 </Grid>

@@ -18,5 +18,18 @@ namespace Write_Wash.Models
         public string Manufacturer { get; set; }
         public float Price { get; set; }
         public int Discount { get; set; }
+
+        public float? DisplayedPrice
+        {
+            get
+            {
+                if (Discount != 0)
+                {
+                    return Price - (Price * Discount / 100);
+                }
+                else { return null; }
+            }
+        }
+
     }
 }
