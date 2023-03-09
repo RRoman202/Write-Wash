@@ -17,5 +17,6 @@ namespace Write_Wash
             Patronymic = string.Empty,
             Role = 0
         };
+        public static List<Product> OrderProductList { get; set; } = new List<Product>();
     }
 }

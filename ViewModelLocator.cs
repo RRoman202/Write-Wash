@@ -17,6 +17,7 @@ namespace Write_Wash
             services.AddTransient<MainWindowViewModel>();
             services.AddTransient<SignViewModel>();
             services.AddTransient<BrowseProductViewModel>();
+            services.AddTransient<ProductOrderViewModel>();
 
             #endregion
 
@@ -60,6 +61,7 @@ namespace Write_Wash
         public MainWindowViewModel MainWindowViewModel => _provider.GetRequiredService<MainWindowViewModel>();
         public SignViewModel SignViewModel => _provider.GetRequiredService<SignViewModel>();
         public BrowseProductViewModel BrowseProductViewModel => _provider.GetRequiredService<BrowseProductViewModel>();
+        public ProductOrderViewModel ProductOrderViewModel => _provider.GetRequiredService<ProductOrderViewModel>();
 
     }
 }

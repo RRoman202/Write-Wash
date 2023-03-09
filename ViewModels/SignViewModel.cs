@@ -55,6 +55,7 @@ namespace Write_Wash.ViewModels
         });
         public DelegateCommand SignUpCommand => new(() => _pageService.ChangePage(new BrowseProduct()));
         public DelegateCommand SignInLaterCommand => new(() => _pageService.ChangePage(new BrowseProduct()));
+        
 
 
     }

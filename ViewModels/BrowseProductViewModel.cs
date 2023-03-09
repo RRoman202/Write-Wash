@@ -99,6 +99,16 @@ namespace Write_Wash.ViewModels
                 UpdateProduct();
             }
         }
+        private int _selectedproduct;
+        public int SelectedProduct
+        {
+            get { return _selectedproduct; }
+            set
+            {
+                _selectedproduct = value;
+                RaisePropertyChanged(nameof(SelectedProduct));
+            }
+        }
         private string _SelectedSort { get; set; }
 
         public string SelectedSort
@@ -169,11 +179,19 @@ namespace Write_Wash.ViewModels
             Global.CurrentUser.Surname = string.Empty;
             Global.CurrentUser.Patronymic = string.Empty;
             Global.CurrentUser.Role = 0;
+            Global.OrderProductList = new List<Product>();
             _pageService.ChangePage(new SignView());
         });
         public DelegateCommand BasketOpen => new(() =>
         {
+            _pageService.ChangePage(new ProductOrder());
 
+
+        });
+        public DelegateCommand AddToOrder => new(() =>
+        {
+            Global.OrderProductList.Add(Products[SelectedProduct]);
+            
         });
     }
 }
