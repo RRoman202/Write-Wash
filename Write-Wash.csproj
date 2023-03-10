@@ -6,11 +6,17 @@
     <RootNamespace>Write_Wash</RootNamespace>
     <Nullable>enable</Nullable>
     <UseWPF>true</UseWPF>
+    <ApplicationIcon>Resources\icon.ico</ApplicationIcon>
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="Resources\icon.ico" />
     <None Remove="Resources\Image\icon.ico" />
     <None Remove="Resources\Image\logo.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="Resources\icon.ico" />
   </ItemGroup>
 
   <ItemGroup>
@@ -39,6 +45,9 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Resource Include="Resources\icon.ico">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Resource>
     <Resource Include="Resources\Image\icon.ico" />
     <Resource Include="Resources\Image\logo.png" />
   </ItemGroup>

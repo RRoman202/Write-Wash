@@ -16,6 +16,8 @@ namespace Write_Wash.Data
         public DbSet<ProductContext> Product { get; set; }
 
         public DbSet<ManufacturesContext> Manufactures { get; set; }
+
+        public DbSet<PointContext> Point { get; set; }
         
         public DataContext(DbContextOptions<DataContext> options)
             : base(options) { }

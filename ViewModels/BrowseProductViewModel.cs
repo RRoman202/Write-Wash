@@ -44,10 +44,12 @@ namespace Write_Wash.ViewModels
         public string _pattern;
 
         public Visibility NullProduct { get; set; }
+        public Visibility OrderEllipse { get; set; }
+        public string OrderProductCount { get; set; }
 
         public string FullName { get; set; } = Global.CurrentUser.Name == string.Empty ? "Гость" : $"{Global.CurrentUser.Surname} {Global.CurrentUser.Name} {Global.CurrentUser.Patronymic}";
 
-        public Visibility BasketVisible { get; set; } = Global.CurrentUser.Name == string.Empty ? Visibility.Collapsed : Visibility.Visible;
+        public Visibility BasketVisible { get; set; }
 
         public BrowseProductViewModel(PageService pageService, ProductService productService)
         {
@@ -59,6 +61,8 @@ namespace Write_Wash.ViewModels
                 MaxProd = Products.Count();
                 CurrentProd = Products.Count();
                 CheckNullProduct();
+                OrderEllipseCheck();
+                if (OrderEllipse == Visibility.Visible) { OrderProductCount = Global.OrderProductList.Count().ToString(); }
             }).WaitAsync(TimeSpan.FromMilliseconds(10))
             .ConfigureAwait(false);
             Sorts = new ObservableCollection<string>
@@ -79,14 +83,7 @@ namespace Write_Wash.ViewModels
 
         void CheckNullProduct()
         {
-            if (CurrentProd > 0)
-            {
-                NullProduct = Visibility.Hidden;
-            }
-            if (CurrentProd == 0)
-            {
-                NullProduct = Visibility.Visible;
-            }
+            if (CurrentProd > 0) { NullProduct = Visibility.Hidden; } else { NullProduct = Visibility.Visible; }
         }
 
         public string Pattern
@@ -99,16 +96,9 @@ namespace Write_Wash.ViewModels
                 UpdateProduct();
             }
         }
-        private int _selectedproduct;
-        public int SelectedProduct
-        {
-            get { return _selectedproduct; }
-            set
-            {
-                _selectedproduct = value;
-                RaisePropertyChanged(nameof(SelectedProduct));
-            }
-        }
+        
+        public int SelectedProduct { get; set; }
+        
         private string _SelectedSort { get; set; }
 
         public string SelectedSort
@@ -190,8 +180,18 @@ namespace Write_Wash.ViewModels
         });
         public DelegateCommand AddToOrder => new(() =>
         {
-            Global.OrderProductList.Add(Products[SelectedProduct]);
+            if(Products.Count > 0)
+            {
+                Global.OrderProductList.Add(Products[SelectedProduct]);
+                OrderProductCount = Global.OrderProductList.Count().ToString();
+                OrderEllipseCheck();
+            }
             
         });
+        void OrderEllipseCheck()
+        {
+            if(Global.OrderProductList.Count() > 0) { OrderEllipse = Visibility.Visible; BasketVisible = Visibility.Visible; } else { OrderEllipse = Visibility.Collapsed; BasketVisible = Visibility.Collapsed; }
+
+        }
     }
 }

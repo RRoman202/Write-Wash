@@ -48,6 +48,7 @@ namespace Write_Wash
             services.AddSingleton<PageService>();
             services.AddSingleton<UserService>();
             services.AddSingleton<ProductService>();
+            services.AddSingleton<PointService>();
 
 
             #endregion

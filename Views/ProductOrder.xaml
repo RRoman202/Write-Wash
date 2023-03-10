@@ -25,39 +25,56 @@
                 <ColumnDefinition Width="*"></ColumnDefinition>
                 <ColumnDefinition Width="*"></ColumnDefinition>
             </Grid.ColumnDefinitions>
-            <TextBox Grid.Column="0"
-                     Margin="5"
-                     FontFamily="Comic Sans MS"
-                     VerticalAlignment="Bottom"
-                     Text="{Binding Pattern, UpdateSourceTrigger=PropertyChanged}"
-                     Style="{StaticResource pwsTextBox}"
-                     materialDesign:HintAssist.Hint="Поиск..."
-                     >
+            <WrapPanel VerticalAlignment="Center">
+                <TextBlock
+                Text="Сумма заказа: "
+                FontFamily="{StaticResource pwsFont}"
+                VerticalAlignment="Center">
+
+                </TextBlock>
+                <TextBlock
+                    Text="{Binding SumOrder, StringFormat={}{0:C}, ConverterCulture=ru-RU}"
+                    FontFamily="{StaticResource pwsFont}"></TextBlock>
+            </WrapPanel>
 
 
 
 
-            </TextBox>
-            <ComboBox Grid.Column="1"
-                      Margin="5"
-                      VerticalAlignment="Bottom"
-                      materialDesign:HintAssist.Hint="Сортировка..."
-                      Style="{StaticResource pwsComboBox}"
-                      ItemsSource="{Binding Sorts}"
-                      SelectedItem="{Binding SelectedSort}"
-                      
-                      >
 
+            <WrapPanel VerticalAlignment="Center" Grid.Column="1">
+                <TextBlock
+                Text="Общая скидка: "
+                FontFamily="{StaticResource pwsFont}"
+                VerticalAlignment="Center">
 
-
-            </ComboBox>
+                </TextBlock>
+                <TextBlock
+                    Text="{Binding DiscountOrder}"
+                    FontFamily="{StaticResource pwsFont}"></TextBlock>
+                <TextBlock Text="%" FontFamily="{StaticResource pwsFont}"></TextBlock>
+            </WrapPanel>
             <ComboBox Grid.Column="2"
-                      Margin="5"
-                      VerticalAlignment="Bottom"
-                      materialDesign:HintAssist.Hint="Фильтрация..."
-                      ItemsSource="{Binding Filtre}"
+                      
+                      VerticalAlignment="Center"
+                      Margin="0 0 0 10"
+                      materialDesign:HintAssist.Hint="Пункт выдачи"
+                      ItemsSource="{Binding Points}"
                       Style="{StaticResource pwsComboBox}"
-                      SelectedItem="{Binding SelectedFiltre}">
+                      >
+                <ComboBox.ItemTemplate>
+                    <DataTemplate>
+                        <Grid>
+                            <WrapPanel HorizontalAlignment="Stretch">
+                                <TextBlock Text="{Binding PointId}" Margin="5"></TextBlock>
+                                <TextBlock Text="{Binding PointIndex}" Margin="5"></TextBlock>
+                                <TextBlock Text="{Binding PointCity}" Margin="5"></TextBlock>
+                                <TextBlock Text="{Binding PointStreet}" Margin="5"></TextBlock>
+                                <TextBlock Text="{Binding PointHome}" Margin="5"></TextBlock>
+                            </WrapPanel>
+                        </Grid>
+                        
+                    </DataTemplate>
+                </ComboBox.ItemTemplate>
 
             </ComboBox>
             <WrapPanel Grid.Column="3" VerticalAlignment="Center" 
@@ -74,7 +91,11 @@
                   HorizontalAlignment="Right">
                 <MenuItem FontFamily="{StaticResource pwsFont}">
                     <MenuItem.Header>
-                        <Image Source="\Resources\Image\logo.png"></Image>
+                        <WrapPanel>
+                            
+                            <Image Source="\Resources\Image\logo.png"></Image>
+                        </WrapPanel>
+                        
                     </MenuItem.Header>
                     <MenuItem Foreground="White"
                               Header="{Binding FullName}"
@@ -101,6 +122,7 @@
         </Grid>
         <Border Grid.Row="1" 
                 Background="{StaticResource pwsAccentedBg}"
+                
                 HorizontalAlignment="Center"
                 VerticalAlignment="Center"
                 Width="350"
@@ -128,10 +150,10 @@
                      >
                 <ListBox.ContextMenu>
                     <ContextMenu>
-                        <MenuItem Header="Добавить к заказу"
+                        <MenuItem Header="Удалить"
                                               FontFamily="{StaticResource pwsFont}"
                                               Foreground="{StaticResource pwsAccentedBg}"
-                                              Command="{Binding AddToOrder}"></MenuItem>
+                                              Command="{Binding DeleteInOrder}"></MenuItem>
                     </ContextMenu>
                 </ListBox.ContextMenu>
                 <ListBox.ItemsPanel>
@@ -220,9 +242,11 @@
             </ListBox>
             
         </Grid>
-        <Button Grid.Row="2" HorizontalAlignment="Center" Margin="0 10 0 10"
+        <Button Grid.Row="2" HorizontalAlignment="Left" Margin="10 10 0 10"
                 Content="Назад к товарам"
                 FontFamily="{StaticResource pwsFont}"
                 Command="{Binding Back}"></Button>
+        <Button Grid.Row="2" HorizontalAlignment="Right" Content="Перейти к оформлению"
+                Margin="0 10 10 10"></Button>
     </Grid>
 </Page>

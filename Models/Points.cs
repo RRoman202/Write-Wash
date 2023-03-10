@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Write_Wash.Models
 {
-    public class Point
+    public class Points
     {
         public int PointId { get; set; }
         public int PointIndex { get; set; }

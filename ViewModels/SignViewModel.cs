@@ -33,11 +33,12 @@ namespace Write_Wash.ViewModels
             {
                 if (await _userService.AuthorizationAsync(Username, Password))
                 {
-                    ErrorMessageButton = string.Empty;
                     await Application.Current.Dispatcher.InvokeAsync(async () => _pageService.ChangePage(new BrowseProduct()));
                 }
                 else
-                    ErrorMessageButton = "Неверный логин или пароль";
+                {
+                    MessageBox.Show("Неверный логин или пароль");
+                }
             });
         }, bool () =>
         {
@@ -45,7 +46,6 @@ namespace Write_Wash.ViewModels
                 || string.IsNullOrWhiteSpace(Password))
             {
                 ErrorMessage = "Пустые поля";
-                ErrorMessageButton = string.Empty;
             }
             else
                 ErrorMessage = string.Empty;

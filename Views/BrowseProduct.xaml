@@ -75,7 +75,13 @@
                   HorizontalAlignment="Right">
                 <MenuItem FontFamily="{StaticResource pwsFont}">
                     <MenuItem.Header>
-                        <Image Source="\Resources\Image\logo.png"></Image>
+                        <WrapPanel>
+                            <Grid VerticalAlignment="Top">
+                                <Ellipse Width="15" Height="15" Fill="red" Visibility="{Binding OrderEllipse}"></Ellipse>
+                                <TextBlock VerticalAlignment="Top" Text="{Binding OrderProductCount}" FontSize="14" Foreground="White" HorizontalAlignment="Center"></TextBlock>
+                            </Grid>
+                            <Image Source="\Resources\Image\logo.png"></Image>
+                        </WrapPanel>
                     </MenuItem.Header>
                     <MenuItem Foreground="White"
                               Header="{Binding FullName}"
@@ -87,6 +93,7 @@
                                Margin="10 0 10 0"></Separator>
                     <MenuItem Header="Корзина"
                               Command="{Binding BasketOpen}"
+                              Visibility="{Binding BasketVisible}"
                               FontSize="14"></MenuItem>
                     <MenuItem Header="Выйти"
                               Command="{Binding SignOutCommand}"

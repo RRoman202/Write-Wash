@@ -24,5 +24,10 @@ namespace Write_Wash.Views
         {
             InitializeComponent();
         }
+
+        private void ListBox_SelectionChanged()
+        {
+
+        }
     }
 }
