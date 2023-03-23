@@ -115,5 +115,43 @@ namespace Write_Wash.ViewModels
             }
             
         });
+        public DelegateCommand RemoveProductInOrder => new DelegateCommand(() =>
+        {
+            try
+            {
+                if (Products[SelectedProduct].ProductCount > 1)
+                {
+                    Global.OrderProductList[SelectedProduct].ProductCount--;
+                    Products = Global.OrderProductList.ToList();
+                    MaxProd = Products.Count();
+                    CurrentProd = Products.Count();
+                    CheckNullProduct();
+                }
+                else if (Products[SelectedProduct].ProductCount == 1)
+                {
+                    Global.OrderProductList.RemoveAt(SelectedProduct);
+                    Products = Global.OrderProductList.ToList();
+                    MaxProd = Products.Count();
+                    CurrentProd = Products.Count();
+                    CheckNullProduct();
+                }
+            }
+            catch { }
+
+        });
+        public DelegateCommand AddProductInOrder => new DelegateCommand(() =>
+        {
+            try
+            {
+                Global.OrderProductList[SelectedProduct].ProductCount++;
+                Products = Global.OrderProductList.ToList();
+                MaxProd = Products.Count();
+                CurrentProd = Products.Count();
+                CheckNullProduct();
+            }
+            catch { }
+            
+
+        });
     }
 }

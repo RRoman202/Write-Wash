@@ -25,7 +25,7 @@ namespace Write_Wash.Views
             InitializeComponent();
         }
 
-        private void ListBox_SelectionChanged()
+        private void ListBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
 
         }

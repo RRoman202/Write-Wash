@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Write_Wash.Models
 {
-    public class Product
+    public class Product : OrderProduct
     {
         public string Image { get; set; }
         public string DisplayedImage

@@ -21,5 +21,6 @@ namespace Write_Wash.Models.DBContext
         public int CurrentDiscount { get; set; }
         public string ProductUnit { get; set; }
         public int ProductDelivery { get; set; }
+        
     }
 }

@@ -182,9 +182,34 @@ namespace Write_Wash.ViewModels
         {
             if(Products.Count > 0)
             {
-                Global.OrderProductList.Add(Products[SelectedProduct]);
-                OrderProductCount = Global.OrderProductList.Count().ToString();
+                if(Global.OrderProductList.Count() > 0)
+                {
+                    int k = 0;
+                    foreach (Product p in Global.OrderProductList.ToList())
+                    {
+                        if(p.Title == Products[SelectedProduct].Title)
+                        {
+                            p.ProductCount++;
+                            
+                        }
+                        else
+                        {
+                            k++;
+                        }
+                    }
+                    if(k == Global.OrderProductList.ToList().Count())
+                    {
+                        Global.OrderProductList.Add(Products[SelectedProduct]);
+                        OrderProductCount = Global.OrderProductList.Count().ToString();
+                    }
+                }
+                else
+                {
+                    Global.OrderProductList.Add(Products[SelectedProduct]);
+                    OrderProductCount = Global.OrderProductList.Count().ToString();
+                }
                 OrderEllipseCheck();
+
             }
             
         });

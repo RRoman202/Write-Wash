@@ -37,7 +37,8 @@ namespace Write_Wash.Services
                             Description = item.ProductDescription,
                             Manufacturer = pmanufactures.SingleOrDefault(pm => pm.idManufactures == item.ProductManufacturer).NameManufactures,
                             Price = item.ProductCost,
-                            Discount = item.CurrentDiscount
+                            Discount = item.CurrentDiscount,
+                            ProductCount = 1
                         }); 
                     }
                 }

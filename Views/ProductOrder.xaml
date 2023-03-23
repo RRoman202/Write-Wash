@@ -8,16 +8,18 @@
       DataContext="{Binding ProductOrderViewModel, Source={StaticResource ViewModelLocator}}"
       mc:Ignorable="d" 
       d:DesignHeight="450" d:DesignWidth="800"
-      Title="ProductOrder" Background="White">
+      Title="ProductOrder" Background="White" x:Name="page">
 
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="auto"></RowDefinition>
+            <RowDefinition Height="auto"></RowDefinition>
             <RowDefinition Height="*"></RowDefinition>
             <RowDefinition Height="auto"></RowDefinition>
         </Grid.RowDefinitions>
-
-        <Grid Grid.Row="0">
+        <TextBlock Grid.Row="0" Text="Корзина" HorizontalAlignment="Center" 
+                   FontFamily="{StaticResource pwsFont}" FontSize="30" Foreground="{StaticResource pwsAccentedBg}"></TextBlock>
+        <Grid Grid.Row="1">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="2*"></ColumnDefinition>
                 <ColumnDefinition Width="1.5*"></ColumnDefinition>
@@ -120,7 +122,7 @@
                 </Menu.Resources>
             </Menu>
         </Grid>
-        <Border Grid.Row="1" 
+        <Border Grid.Row="2" 
                 Background="{StaticResource pwsAccentedBg}"
                 
                 HorizontalAlignment="Center"
@@ -129,16 +131,16 @@
                 Height="100"
                 CornerRadius="20"
                 Visibility="{Binding NullProduct}">
-            <TextBlock Text="Таких товаров нет =("
+            <TextBlock Text="Корзина пуста =("
                        HorizontalAlignment="Center"
                        VerticalAlignment="Center"
                        FontFamily="{StaticResource pwsFont}"
                        FontSize="30"></TextBlock>
         </Border>
-        <Grid Grid.Row="1">
+        <Grid Grid.Row="2">
             <ListBox FontFamily="{StaticResource pwsFont}"
                       ItemsSource="{Binding Products}"
-                     SelectedIndex="{Binding SelectedProduct}"
+                     SelectedIndex="{Binding SelectedProduct, Mode=TwoWay}"
                      
                       HorizontalAlignment="Stretch"
                       HorizontalContentAlignment="Stretch"
@@ -154,6 +156,15 @@
                                               FontFamily="{StaticResource pwsFont}"
                                               Foreground="{StaticResource pwsAccentedBg}"
                                               Command="{Binding DeleteInOrder}"></MenuItem>
+                        <WrapPanel Grid.Column="3"
+                                           VerticalAlignment="Center"
+                                           HorizontalAlignment="Stretch"
+                                           >
+                            <Button Content="-" Command="{Binding RemoveProductInOrder}" Margin="0 0 20 0"></Button>
+                            
+                            <Button Content="+" Margin="20 0 0 0" Command="{Binding AddProductInOrder}"></Button>
+
+                        </WrapPanel>
                     </ContextMenu>
                 </ListBox.ContextMenu>
                 <ListBox.ItemsPanel>
@@ -176,6 +187,7 @@
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="*"></ColumnDefinition>
                                     <ColumnDefinition Width="3*"></ColumnDefinition>
+                                    <ColumnDefinition Width="*"></ColumnDefinition>
                                     <ColumnDefinition Width="*"></ColumnDefinition>
                                 </Grid.ColumnDefinitions>
 
@@ -233,6 +245,8 @@
                                            ></TextBlock>
                                     <TextBlock Text="%"></TextBlock>
                                 </WrapPanel>
+                                <TextBlock Grid.Column="3" Text="{Binding ProductCount}" FontFamily="{StaticResource pwsFont}" VerticalAlignment="Center"></TextBlock>
+                                
 
                             </Grid>
 
@@ -242,11 +256,11 @@
             </ListBox>
             
         </Grid>
-        <Button Grid.Row="2" HorizontalAlignment="Left" Margin="10 10 0 10"
+        <Button Grid.Row="3" HorizontalAlignment="Left" Margin="10 10 0 10"
                 Content="Назад к товарам"
                 FontFamily="{StaticResource pwsFont}"
                 Command="{Binding Back}"></Button>
-        <Button Grid.Row="2" HorizontalAlignment="Right" Content="Перейти к оформлению"
+        <Button Grid.Row="3" HorizontalAlignment="Right" Content="Перейти к оформлению"
                 Margin="0 10 10 10"></Button>
     </Grid>
 </Page>
