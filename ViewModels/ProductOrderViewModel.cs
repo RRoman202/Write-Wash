@@ -12,6 +12,7 @@ namespace Write_Wash.ViewModels
         private readonly PageService _pageService;
         private readonly ProductService _productService;
         private readonly PointService _pointService;
+        private readonly OrderService _orderService;
         public List<Product> Products { get; set; }
 
         public int MaxProd { get; set; }
@@ -31,11 +32,12 @@ namespace Write_Wash.ViewModels
         public string SumOrder { get; set; }
         public string DiscountOrder { get; set; }
 
-        public ProductOrderViewModel(PageService pageService, ProductService productService, PointService pointService)
+        public ProductOrderViewModel(PageService pageService, ProductService productService, PointService pointService, OrderService orderService)
         {
             _pageService = pageService;
             _productService = productService;
             _pointService = pointService;
+            _orderService = orderService;
             Task.Run(async () =>
             {
                 Points = await _pointService.GetPoints();
@@ -152,6 +154,10 @@ namespace Write_Wash.ViewModels
             catch { }
             
 
+        });
+        public DelegateCommand OrderBut => new DelegateCommand(() =>
+        {
+            _orderService.NewOrder();
         });
     }
 }

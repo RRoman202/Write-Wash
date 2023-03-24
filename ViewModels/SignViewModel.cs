@@ -53,7 +53,7 @@ namespace Write_Wash.ViewModels
             if (ErrorMessage.Equals(string.Empty))
                 return true; return false;
         });
-        public DelegateCommand SignUpCommand => new(() => _pageService.ChangePage(new BrowseProduct()));
+        public DelegateCommand RegBut => new(() => _pageService.ChangePage(new RegistrationView()));
         public DelegateCommand SignInLaterCommand => new(() => _pageService.ChangePage(new BrowseProduct()));
         
 
