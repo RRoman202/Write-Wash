@@ -31,6 +31,8 @@ namespace Write_Wash
                     options.UseMySql(
                     "server=localhost;user=root;password=2703123rrr;database=trade;",
                      new MySqlServerVersion(new Version(8, 0, 30)));
+                    options.UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking);
+                    options.EnableSensitiveDataLogging();
 
                 }
                 catch (MySqlConnector.MySqlException)
@@ -39,6 +41,8 @@ namespace Write_Wash
                     options.UseMySql(
                     "server=localhost;user=root;password=2703123rrr;database=trade;",
                      new MySqlServerVersion(new Version(8, 0, 30)));
+                    options.UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking);
+                    options.EnableSensitiveDataLogging();
                 }
             }, ServiceLifetime.Transient);
 
@@ -59,6 +63,7 @@ namespace Write_Wash
             foreach (var service in services)
             {
                 _provider.GetRequiredService(service.ServiceType);
+                
             }
         }
         public MainWindowViewModel MainWindowViewModel => _provider.GetRequiredService<MainWindowViewModel>();

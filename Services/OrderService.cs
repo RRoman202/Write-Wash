@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Write_Wash.Models;
 
 namespace Write_Wash.Services
 {
@@ -16,31 +17,46 @@ namespace Write_Wash.Services
         }
         public async void NewOrder()
         {
-            
-            _context.order1.Add(new OrderContext
-            {
-                OrderID = _context.order1.Count() + 1,
-                OrderStatus = "Новый",
-                FIO = Global.CurrentUser.Surname + " " + Global.CurrentUser.Name + " " + Global.CurrentUser.Patronymic,
-                OrderCode= _context.order1.Count(),
-                OrderDate1= DateTime.Now,
-                OrderDate2= DateTime.Now.AddDays(6),
-                OrderList = _context.order1.Count() + 1,
-                UserId = Global.CurrentUser.Id,
-            });
-            
-            for(int i =0;i < Global.OrderProductList.ToList().Count(); i++)
-            {
-                _context.orderproduct.Add(new OrderProductContext
-                {
-                    OrderID= _context.order1.Count() + 1,
-                    ProductArticleNumber = Global.OrderProductList[i].ProductArticleNumber,
-                    ProductCount = Global.OrderProductList[i].ProductCount,
 
-                });
-                
-            }
-            _context.SaveChanges();
+            int orderNumber = _context.order1.Max(o => o.OrderID) + 1;
+            int receiptСode = _context.order1.Max(o => o.OrderCode) + 1;
+
+            await _context.order1.AddAsync(new OrderContext
+            {
+                OrderID = orderNumber,
+                OrderStatus = "Новый",
+                OrderDate1 = DateTime.Now,
+                OrderDate2 = DateTime.Now.AddYears(6),
+                OrderPickupPoint = 1,
+                FIO = Global.CurrentUser != null ? $"{Global.CurrentUser.Surname} {Global.CurrentUser.Name} {Global.CurrentUser.Patronymic}" : null,
+                OrderCode = receiptСode
+            });
+
+            await _context.SaveChangesAsync();
+            //List<OrderProductContext> orderproductList = new List<OrderProductContext>();
+            //foreach (Product cartItem in Global.OrderProductList)
+            //{
+            //    orderproductList.Add(new OrderProductContext
+            //    {
+            //        OrderID = orderNumber,
+            //        ProductArticleNumber = cartItem.ProductArticleNumber,
+            //        ProductCount = cartItem.ProductCount
+            //    });
+            //}
+
+            //foreach (Product cartItem in Global.OrderProductList)
+            //{
+            //    ProductContext? product = await _context.Product.Where(p => p.ProductArticleNumber == cartItem.ProductArticleNumber).SingleOrDefaultAsync();
+
+            //    if (product != null)
+            //    {
+            //        product.ProductQuantityInStock -= cartItem.ProductCount;
+            //    }
+            //}
+            //await _context.orderproduct.AddRangeAsync(orderproductList);
+
+
+            //await _context.SaveChangesAsync();
         }
     }
 }
