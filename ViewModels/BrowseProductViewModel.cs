@@ -34,7 +34,7 @@ namespace Write_Wash.ViewModels
         private readonly PageService _pageService;
         private readonly ProductService _productService;
         public List<Product> Products { get; set; }
-
+        private readonly DataContext _context;
         public int MaxProd { get; set; }
         public int CurrentProd { get; set; }
 
@@ -51,8 +51,9 @@ namespace Write_Wash.ViewModels
 
         public Visibility BasketVisible { get; set; }
 
-        public BrowseProductViewModel(PageService pageService, ProductService productService)
+        public BrowseProductViewModel(PageService pageService, ProductService productService, DataContext context)
         {
+            _context = context;
             _pageService = pageService;
             _productService = productService;
             Task.Run(async () =>
@@ -62,7 +63,7 @@ namespace Write_Wash.ViewModels
                 CurrentProd = Products.Count();
                 CheckNullProduct();
                 OrderEllipseCheck();
-                if (OrderEllipse == Visibility.Visible) { OrderProductCount = Global.OrderProductList.Count().ToString(); }
+                if (OrderEllipse == Visibility.Visible) { OrderProductCount = Global.Cart.Count().ToString(); }
             }).WaitAsync(TimeSpan.FromMilliseconds(10))
             .ConfigureAwait(false);
             Sorts = new ObservableCollection<string>
@@ -133,27 +134,27 @@ namespace Write_Wash.ViewModels
                 switch (SelectedFiltre)
                 {
                     case "0 - 9,99%":
-                        currentProduct = currentProduct.Where(p => p.Discount >= 0 && p.Discount < 10).ToList();
+                        currentProduct = currentProduct.Where(p => p.CurrentDiscount >= 0 && p.CurrentDiscount < 10).ToList();
                         break;
                     case "10 - 14,99%":
-                        currentProduct = currentProduct.Where(p => p.Discount >= 10 && p.Discount < 15).ToList();
+                        currentProduct = currentProduct.Where(p => p.CurrentDiscount >= 10 && p.CurrentDiscount < 15).ToList();
                         break;
                     case "15% и более":
-                        currentProduct = currentProduct.Where(p => p.Discount >= 15).ToList();
+                        currentProduct = currentProduct.Where(p => p.CurrentDiscount >= 15).ToList();
                         break;
                 }
             }
             if (!string.IsNullOrEmpty(Pattern))
-                currentProduct = currentProduct.Where(p => p.Title.ToLower().Contains(Pattern.ToLower())).ToList();
+                currentProduct = currentProduct.Where(p => p.ProductName.ToLower().Contains(Pattern.ToLower())).ToList();
             if (!string.IsNullOrEmpty(SelectedSort))
             {
                 switch (SelectedSort)
                 {
                     case "По возрастанию":
-                        currentProduct = currentProduct.OrderBy(p => p.Price).ToList();
+                        currentProduct = currentProduct.OrderBy(p => p.ProductCost).ToList();
                         break;
                     case "По убыванию":
-                        currentProduct = currentProduct.OrderByDescending(p => p.Price).ToList();
+                        currentProduct = currentProduct.OrderByDescending(p => p.ProductCost).ToList();
                         break;
                 }
             }
@@ -169,7 +170,7 @@ namespace Write_Wash.ViewModels
             Global.CurrentUser.Surname = string.Empty;
             Global.CurrentUser.Patronymic = string.Empty;
             Global.CurrentUser.Role = 0;
-            Global.OrderProductList = new List<Product>();
+            Global.Cart = new List<OrderProduct>();
             _pageService.ChangePage(new SignView());
         });
         public DelegateCommand BasketOpen => new(() =>
@@ -180,43 +181,57 @@ namespace Write_Wash.ViewModels
         });
         public DelegateCommand AddToOrder => new(() =>
         {
-            if(Products.Count > 0)
+            if (Products.Count > 0)
             {
-                if(Global.OrderProductList.Count() > 0)
+                if (Global.Cart.Count() > 0)
                 {
                     int k = 0;
-                    foreach (Product p in Global.OrderProductList.ToList())
+                    foreach (OrderProduct p in Global.Cart.ToList())
                     {
-                        if(p.Title == Products[SelectedProduct].Title)
+                        if (p.ProductArticleNumber == Products[SelectedProduct].ProductArticleNumber)
                         {
                             p.ProductCount++;
-                            
+
                         }
                         else
                         {
                             k++;
                         }
+                        
                     }
-                    if(k == Global.OrderProductList.ToList().Count())
+                    if (k == Global.Cart.ToList().Count())
                     {
-                        Global.OrderProductList.Add(Products[SelectedProduct]);
-                        OrderProductCount = Global.OrderProductList.Count().ToString();
+                        Global.Cart.Add(new OrderProduct
+                        {
+                            OrderId = _context.order1.Max(o => o.OrderID) + 1,
+                            ProductArticleNumber = Products[SelectedProduct].ProductArticleNumber,
+                            ProductCount = 1
+                        });
+                        OrderProductCount = Global.Cart.Count().ToString();
+                        
                     }
                 }
                 else
                 {
-                    Global.OrderProductList.Add(Products[SelectedProduct]);
-                    OrderProductCount = Global.OrderProductList.Count().ToString();
+                    Global.Cart.Add(new OrderProduct
+                    {
+                        OrderId = _context.order1.Max(o => o.OrderID) + 1,
+                        ProductArticleNumber = Products[SelectedProduct].ProductArticleNumber,
+                        ProductCount = 1
+                    });
+                    OrderProductCount = Global.Cart.Count().ToString();
+                    
+                    
                 }
                 OrderEllipseCheck();
 
             }
             
+
         });
         void OrderEllipseCheck()
         {
-            if(Global.OrderProductList.Count() > 0) { OrderEllipse = Visibility.Visible; BasketVisible = Visibility.Visible; } else { OrderEllipse = Visibility.Collapsed; BasketVisible = Visibility.Collapsed; }
-
+            if(Global.Cart.Count() > 0) { OrderEllipse = Visibility.Visible; BasketVisible = Visibility.Visible; } else { OrderEllipse = Visibility.Collapsed; BasketVisible = Visibility.Collapsed; }
         }
     }
 }

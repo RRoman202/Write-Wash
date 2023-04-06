@@ -32,13 +32,14 @@ namespace Write_Wash.Services
                     {
                         products.Add(new Product
                         {
-                            Image = item.ProductPhoto == string.Empty ? "picture.png" : item.ProductPhoto,
-                            Title = item.ProductName,
-                            Description = item.ProductDescription,
+                            ProductPhoto = item.ProductPhoto == string.Empty ? "picture.png" : item.ProductPhoto,
+                            ProductName = item.ProductName,
+                            ProductDescription = item.ProductDescription,
                             Manufacturer = pmanufactures.SingleOrDefault(pm => pm.idManufactures == item.ProductManufacturer).NameManufactures,
-                            Price = item.ProductCost,
-                            Discount = item.CurrentDiscount,
-                            ProductCount = 1
+                            ProductCost = item.ProductCost,
+                            CurrentDiscount = item.CurrentDiscount,
+                            ProductArticleNumber = item.ProductArticleNumber
+                            
                         }); 
                     }
                 }
