@@ -38,7 +38,8 @@ namespace Write_Wash.Services
                             Manufacturer = pmanufactures.SingleOrDefault(pm => pm.idManufactures == item.ProductManufacturer).NameManufactures,
                             ProductCost = item.ProductCost,
                             CurrentDiscount = item.CurrentDiscount,
-                            ProductArticleNumber = item.ProductArticleNumber
+                            ProductArticleNumber = item.ProductArticleNumber,
+                            ProductCount = 0
                             
                         }); 
                     }
@@ -47,6 +48,22 @@ namespace Write_Wash.Services
             });
             return products;
         }
-        
+        public async Task<List<Product>> GetCart()
+        {
+            List<Product> dbProducts = new();
+            var currentProducts = await GetProducts();
+
+            foreach (var item in Global.Cart)
+            {
+                var product = currentProducts.SingleOrDefault(s => s.ProductArticleNumber.Equals(item.ProductArticleNumber));
+                if (product != null)
+                {
+                    product.ProductCount = Global.Cart.Single(s => s.ProductArticleNumber.Equals(product.ProductArticleNumber)).ProductCount;
+                    dbProducts.Add(product);
+                }
+            }
+            return dbProducts;
+        }
+
     }
 }

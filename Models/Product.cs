@@ -24,5 +24,6 @@ namespace Write_Wash.Models
                 else { return null; }
             }
         }
+        public int ProductCount { get; set; }
     }
 }

@@ -147,10 +147,11 @@
                       HorizontalContentAlignment="Stretch"
                       ScrollViewer.HorizontalScrollBarVisibility="Disabled"
                      ScrollViewer.CanContentScroll="False"
-                     
+                     x:Name="list"
                      Focusable="False"
                      
                      >
+               
                 <ListBox.ContextMenu>
                     <ContextMenu>
                         <MenuItem Header="Удалить"
@@ -173,7 +174,7 @@
                         <VirtualizingStackPanel IsItemsHost="True" Orientation="Vertical" HorizontalAlignment="Stretch" ></VirtualizingStackPanel>
                     </ItemsPanelTemplate>
                 </ListBox.ItemsPanel>
-
+                    
                 <ListBox.ItemTemplate>
                     <DataTemplate>
                         <materialDesign:Card Background="{Binding CurrentDiscount, Converter={StaticResource StringToBrushConverter}}"
@@ -246,7 +247,12 @@
                                            ></TextBlock>
                                     <TextBlock Text="%"></TextBlock>
                                 </WrapPanel>
-                                <TextBlock Grid.Column="3" Text="{Binding StringFormat=Количество: {0} шт,Path=ProductCount}" FontFamily="{StaticResource pwsFont}" VerticalAlignment="Center"></TextBlock>
+                                <WrapPanel Grid.Column="3" VerticalAlignment="Center">
+                                    <Button Content="-" Margin="10" Command="{Binding ElementName=list, Path=DataContext.RemoveProductInOrder}" CommandParameter="{Binding}"></Button>
+                                    <TextBlock Grid.Column="3" Text="{Binding StringFormat=Количество: {0} шт,Path=ProductCount}" FontFamily="{StaticResource pwsFont}" VerticalAlignment="Center"></TextBlock>
+                                    <Button Content="+" Margin="10" Command="{Binding ElementName=list, Path=DataContext.AddProductInOrder}"></Button>
+                                </WrapPanel>
+                                
                                 
 
                             </Grid>

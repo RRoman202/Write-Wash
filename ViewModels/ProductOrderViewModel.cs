@@ -35,6 +35,8 @@ namespace Write_Wash.ViewModels
         public string SumOrder { get; set; }
         public string DiscountOrder { get; set; }
 
+        public List<Product> allp { get; set; }
+
         public ProductOrderViewModel(PageService pageService, ProductService productService, PointService pointService, OrderService orderService)
         {
             _pageService = pageService;
@@ -44,47 +46,64 @@ namespace Write_Wash.ViewModels
             Task.Run(async () =>
             {
                 Points = await _pointService.GetPoints();
-                List<Product> pp = await _productService.GetProducts();
-                List<Product> ppp = new List<Product>();
-                foreach (OrderProduct o in Global.Cart.ToList())
-                {
-                    for(int i =0;i < pp.ToList().Count(); i++)
-                    {
-                        if (o.ProductArticleNumber == pp[i].ProductArticleNumber)
-                        {
-                            ppp.Add(pp[i]);
-                        }
-                    }
-                    
-                }
-                Products = ppp;
+                
+                Products = await _productService.GetCart();
                 
                 MaxProd = Products.Count();
                 CurrentProd = Products.Count();
-                //SumOrder = CheckSumOrder().ToString();
+                SumOrder = CheckSumOrder().ToString();
                 DiscountOrder = DiscountOrderCheck().ToString();
                 CheckNullProduct();
-                
+
             }).WaitAsync(TimeSpan.FromMilliseconds(10))
             .ConfigureAwait(false);
             
         }
-        //float? CheckSumOrder()
-        //{
-        //    //float? sumorder = 0;
-        //    //foreach(Product p in Products)
-        //    //{
-        //    //    if(p.CurrentDiscount != 0)
-        //    //    {
-        //    //        sumorder += p.DisplayedPrice * p.ProductCount;
-        //    //    }
-        //    //    else
-        //    //    {
-        //    //        sumorder += p.ProductCost * p.ProductCount;
-        //    //    }
-        //    //}
-        //    //return sumorder;
-        //}
+        public void GetProducts()
+        {
+            
+            List<Product> ppp = new List<Product>();
+            foreach (OrderProduct o in Global.Cart.ToList())
+            {
+                for (int i = 0; i < allp.ToList().Count(); i++)
+                {
+                    
+                    if (o.ProductArticleNumber == allp[i].ProductArticleNumber)
+                    {
+                        ppp.Add(allp[i]);
+                        ppp[Global.Cart.Count() - 1].ProductCount = o.ProductCount;
+                    }
+                }
+
+            }
+            Products = ppp;
+            
+            
+        }
+        float? CheckSumOrder()
+        {
+
+            float? sumorder = 0;
+            foreach (Product p in Products)
+            {
+                foreach(OrderProduct o in Global.Cart)
+                {
+                    if(o.ProductArticleNumber == p.ProductArticleNumber)
+                    {
+                        if (p.CurrentDiscount != 0)
+                        {
+                            sumorder += p.DisplayedPrice * o.ProductCount;
+                        }
+                        else
+                        {
+                            sumorder += p.ProductCost * o.ProductCount;
+                        }
+                    }
+                }
+                
+            }
+            return sumorder;
+        }
         float? DiscountOrderCheck()
         {
             float? disc;
@@ -120,61 +139,88 @@ namespace Write_Wash.ViewModels
         {
             if(Products.Count() > 0)
             {
-                //Global.Cart.RemoveAt(SelectedProduct);
-                //Products = Global.OrderProductList.ToList();
-                //MaxProd = Products.Count();
-                //CurrentProd = Products.Count();
-                //CheckNullProduct();
-                ////SumOrder = CheckSumOrder().ToString();
-                //if (Global.OrderProductList.Count > 0)
-                //    DiscountOrder = DiscountOrderCheck().ToString();
-                //else
-                //    DiscountOrder = null;
+                
+                Global.Cart.RemoveAt(SelectedProduct);
+                Task.Run(async () =>
+                {
+                    Products = await _productService.GetCart();
+                    MaxProd = Products.Count();
+                    CurrentProd = Products.Count();
+                    SumOrder = CheckSumOrder().ToString();
+                    DiscountOrder = DiscountOrderCheck().ToString();
+                    CheckNullProduct();
+                    
+
+                }).WaitAsync(TimeSpan.FromMilliseconds(10))
+                .ConfigureAwait(false);
+                if (Global.Cart.Count > 0)
+                    DiscountOrder = DiscountOrderCheck().ToString();
+                else
+                    DiscountOrder = null;
+
             }
             
         });
         public DelegateCommand RemoveProductInOrder => new DelegateCommand(() =>
         {
-            //try
-            //{
-            //    if (Products[SelectedProduct].ProductCount > 1)
-            //    {
-            //        Global.OrderProductList[SelectedProduct].ProductCount--;
-            //        Products = Global.OrderProductList.ToList();
-            //        MaxProd = Products.Count();
-            //        CurrentProd = Products.Count();
-            //        CheckNullProduct();
-            //        SumOrder = CheckSumOrder().ToString();
-            //        DiscountOrder = DiscountOrderCheck().ToString();
-            //    }
-            //    else if (Products[SelectedProduct].ProductCount == 1)
-            //    {
-            //        Global.OrderProductList.RemoveAt(SelectedProduct);
-            //        Products = Global.OrderProductList.ToList();
-            //        MaxProd = Products.Count();
-            //        CurrentProd = Products.Count();
-            //        CheckNullProduct();
-            //        SumOrder = CheckSumOrder().ToString();
-            //        DiscountOrder = DiscountOrderCheck().ToString();
-            //    }
-            //}
-            //catch { }
+            try
+            {
+                if (Global.Cart[SelectedProduct].ProductCount > 1)
+                {
+                    Global.Cart[SelectedProduct].ProductCount--;
+                    Task.Run(async () =>
+                    {
+                        Products = await _productService.GetCart();
+                        MaxProd = Products.Count();
+                        CurrentProd = Products.Count();
+                        SumOrder = CheckSumOrder().ToString();
+                        DiscountOrder = DiscountOrderCheck().ToString();
+                        CheckNullProduct();
+
+
+                    }).WaitAsync(TimeSpan.FromMilliseconds(10))
+                .ConfigureAwait(false);
+                }
+                else if (Global.Cart[SelectedProduct].ProductCount == 1)
+                {
+                    Global.Cart.RemoveAt(SelectedProduct);
+                    Task.Run(async () =>
+                    {
+                        Products = await _productService.GetCart();
+                        MaxProd = Products.Count();
+                        CurrentProd = Products.Count();
+                        SumOrder = CheckSumOrder().ToString();
+                        DiscountOrder = DiscountOrderCheck().ToString();
+                        CheckNullProduct();
+
+
+                    }).WaitAsync(TimeSpan.FromMilliseconds(10))
+                .ConfigureAwait(false);
+                }
+            }
+            catch { }
 
         });
         public DelegateCommand AddProductInOrder => new DelegateCommand(() =>
         {
-            //try
-            //{
-            //    Global.OrderProductList[SelectedProduct].ProductCount++;
-            //    Products = Global.OrderProductList.ToList();
-            //    MaxProd = Products.Count();
-            //    CurrentProd = Products.Count();
-            //    CheckNullProduct();
-            //    SumOrder = CheckSumOrder().ToString();
-            //    DiscountOrder = DiscountOrderCheck().ToString();
-            //}
-            //catch { }
-            
+            try
+            {
+                Global.Cart[SelectedProduct].ProductCount++;
+                Task.Run(async () =>
+                {
+                    Products = await _productService.GetCart();
+                    MaxProd = Products.Count();
+                    CurrentProd = Products.Count();
+                    SumOrder = CheckSumOrder().ToString();
+                    DiscountOrder = DiscountOrderCheck().ToString();
+                    CheckNullProduct();
+
+
+                }).WaitAsync(TimeSpan.FromMilliseconds(10))
+                .ConfigureAwait(false);
+            }
+            catch { }
+
 
         });
         public DelegateCommand OrderBut => new DelegateCommand(() =>
@@ -183,74 +229,69 @@ namespace Write_Wash.ViewModels
         });
         public DelegateCommand Pdf => new DelegateCommand(() =>
         {
-
-            CreatePDF();
-            
-
-            
-            
+            CreatePDF(); 
         });
         private void CreatePDF()
         {
-            //// Создаем документ и задаем размер страницы
-            //Document document = new Document(PageSize.A4, 50, 50, 25, 25);
+            // Создаем документ и задаем размер страницы
+            Document document = new Document(PageSize.A4, 50, 50, 25, 25);
 
-            //// Создаем файл для записи
-            //FileStream fs = new FileStream("test.pdf", FileMode.Create);
+            // Создаем файл для записи
+            FileStream fs = new FileStream("test.pdf", FileMode.Create);
 
-            //// Создаем объект для записи PDF
-            //PdfWriter writer = PdfWriter.GetInstance(document, fs);
+            // Создаем объект для записи PDF
+            PdfWriter writer = PdfWriter.GetInstance(document, fs);
 
-            //Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
+            Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
 
-            //string ttf = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Fonts), "ARIAL.TTF");
-            //var baseFont = BaseFont.CreateFont(ttf, BaseFont.IDENTITY_H, BaseFont.NOT_EMBEDDED);
-            //var font = new Font(baseFont, iTextSharp.text.Font.DEFAULTSIZE, iTextSharp.text.Font.NORMAL);
+            string ttf = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Fonts), "ARIAL.TTF");
+            var baseFont = BaseFont.CreateFont(ttf, BaseFont.IDENTITY_H, BaseFont.NOT_EMBEDDED);
+            var font = new Font(baseFont, iTextSharp.text.Font.DEFAULTSIZE, iTextSharp.text.Font.NORMAL);
 
-            //// Открываем документ для записи
-            //document.Open();
-            
+            // Открываем документ для записи
+            document.Open();
 
-            //// Добавляем текст в документ
-            //Paragraph paragraph = new Paragraph("Талон", font);
-            
-            //document.Add(paragraph);
-            //Paragraph paragraph2 = new Paragraph(DateTime.Now.ToString());
-            //document.Add(paragraph2);
-            //foreach(Product p in Global.OrderProductList)
-            //{
-            //    if(p.Discount == 0)
-            //    {
-            //        Paragraph pp = new Paragraph(p.Title + " " + p.Manufacturer + " " + p.ProductCount + "шт " + (p.Price * p.ProductCount).ToString() + "₽", font);
-            //        document.Add(pp);
-            //    }
-            //    else
-            //    {
-            //        Paragraph pp = new Paragraph(p.Title + " " + p.Manufacturer + " " + p.ProductCount + "шт " + (p.DisplayedPrice * p.ProductCount).ToString() + "₽", font);
-            //        document.Add(pp);
-            //    }
-                
 
-            //}
-            //Paragraph p1 = new Paragraph("Общая стоимость: " + SumOrder + "₽", font);
-            //document.Add(p1);
-            //Paragraph p2 = new Paragraph("Общая скидка: " + DiscountOrder + "%", font);
-            //document.Add(p2);
-            //string code = "";
-            //for(int i = 0; i < 3; i++)
-            //{
-            //    Random rnd = new Random();
-            //    int r = rnd.Next(9);
-            //    code += r.ToString();
-            //}
-            //Paragraph p3 = new Paragraph("Код получения: " + code, font);
-            //document.Add(p3);
-            //// Закрываем документ
-            //document.Close();
-            //string pdfViewerPath = @"C:\Program Files\Adobe\Acrobat DC\Acrobat\Acrobat.exe";
+            // Добавляем текст в документ
+            Paragraph paragraph = new Paragraph("Талон", font);
 
-            //// Открываем PDF файл
-            //System.Diagnostics.Process.Start(pdfViewerPath, "test.pdf");
+            document.Add(paragraph);
+            Paragraph paragraph2 = new Paragraph(DateTime.Now.ToString());
+            document.Add(paragraph2);
+            foreach (Product p in Products)
+            {
+                if (p.CurrentDiscount == 0)
+                {
+                    Paragraph pp = new Paragraph(p.ProductName + " " + p.Manufacturer + " " + p.ProductCount + "шт " + (p.ProductCost * p.ProductCount).ToString() + "₽", font);
+                    document.Add(pp);
+                }
+                else
+                {
+                    Paragraph pp = new Paragraph(p.ProductName + " " + p.Manufacturer + " " + p.ProductCount + "шт " + (p.DisplayedPrice * p.ProductCount).ToString() + "₽", font);
+                    document.Add(pp);
+                }
+
+
+            }
+            Paragraph p1 = new Paragraph("Общая стоимость: " + SumOrder + "₽", font);
+            document.Add(p1);
+            Paragraph p2 = new Paragraph("Общая скидка: " + DiscountOrder + "%", font);
+            document.Add(p2);
+            string code = "";
+            for (int i = 0; i < 3; i++)
+            {
+                Random rnd = new Random();
+                int r = rnd.Next(9);
+                code += r.ToString();
+            }
+            Paragraph p3 = new Paragraph("Код получения: " + code, font);
+            document.Add(p3);
+            // Закрываем документ
+            document.Close();
+            string pdfViewerPath = @"C:\Program Files\Adobe\Acrobat DC\Acrobat\Acrobat.exe";
+
+            // Открываем PDF файл
+            System.Diagnostics.Process.Start(pdfViewerPath, "test.pdf");
         }
 
     }
