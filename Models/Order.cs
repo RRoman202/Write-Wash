@@ -15,8 +15,8 @@ namespace Write_Wash.Models
         public int OrderPickupPoint { get; set; }
         public string fio { get; set; }
         public int OrderCode { get; set; }
-        public DateTime OrderDate1 { get; set; }
-        public DateTime OrderDate2 { get; set; }
+        public string OrderDate1 { get; set; }
+        public string OrderDate2 { get; set; }
         public int OrderList { get; set; }
         public int UserId { get; set; }
     }

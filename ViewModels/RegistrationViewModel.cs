@@ -12,7 +12,7 @@ namespace Write_Wash.ViewModels
         public event PropertyChangedEventHandler PropertyChanged;
         private readonly DataContext _context;
         private readonly PageService _pageService;
-
+        
         public string surname { get; set; }
         public string name { get; set; }
         public string patronymic { get; set; }

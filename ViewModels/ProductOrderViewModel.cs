@@ -235,7 +235,7 @@ namespace Write_Wash.ViewModels
         {
             // Создаем документ и задаем размер страницы
             Document document = new Document(PageSize.A4, 50, 50, 25, 25);
-
+            
             // Создаем файл для записи
             FileStream fs = new FileStream("test.pdf", FileMode.Create);
 

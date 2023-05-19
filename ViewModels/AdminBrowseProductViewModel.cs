@@ -1,34 +1,20 @@
-﻿using DevExpress.Mvvm.UI.Native;
-using MaterialDesignThemes.Wpf;
-using Microsoft.VisualBasic;
+﻿using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
-using System.Runtime.CompilerServices;
 using System.Text;
-using System.Text.RegularExpressions;
 using System.Threading.Tasks;
-using System.Windows;
-using System.Windows.Controls.Primitives;
-using System.Windows.Data;
+using System.Windows.Media;
 using Write_Wash.Models;
-using System;
-using System.Collections.ObjectModel;
-using System.ComponentModel;
-using System.Windows;
-using System.Windows.Controls;
-using System.Reflection;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.EntityFrameworkCore.Query.Internal;
 using Write_Wash.Services;
-using MaterialDesignColors;
 
 namespace Write_Wash.ViewModels
 {
-    internal class BrowseProductViewModel : BindableBase
+    internal class AdminBrowseProductViewModel : BindableBase
     {
+
+
 
         public event PropertyChangedEventHandler PropertyChanged;
         private readonly PageService _pageService;
@@ -47,13 +33,13 @@ namespace Write_Wash.ViewModels
         public Visibility OrderEllipse { get; set; }
         public string OrderProductCount { get; set; }
 
-        public Visibility menuitems { get; set; } = Global.CurrentUser.Role == 1 || Global.CurrentUser.Role == 3 ? Visibility.Visible : Visibility.Collapsed; 
+        public Visibility menuitems { get; set; } = Global.CurrentUser.Role == 1 || Global.CurrentUser.Role == 3 ? Visibility.Visible : Visibility.Collapsed;
 
         public string FullName { get; set; } = Global.CurrentUser.Name == string.Empty ? "Гость" : $"{Global.CurrentUser.Surname} {Global.CurrentUser.Name} {Global.CurrentUser.Patronymic}";
 
         public Visibility BasketVisible { get; set; }
 
-        public BrowseProductViewModel(PageService pageService, ProductService productService, DataContext context)
+        public AdminBrowseProductViewModel(PageService pageService, ProductService productService, DataContext context)
         {
             _context = context;
             _pageService = pageService;
@@ -83,12 +69,14 @@ namespace Write_Wash.ViewModels
             
 
         }
-
         void CheckNullProduct()
         {
             if (CurrentProd > 0) { NullProduct = Visibility.Hidden; } else { NullProduct = Visibility.Visible; }
         }
-
+        void OrderEllipseCheck()
+        {
+            if (Global.Cart.Count() > 0) { OrderEllipse = Visibility.Visible; BasketVisible = Visibility.Visible; } else { OrderEllipse = Visibility.Collapsed; BasketVisible = Visibility.Collapsed; }
+        }
         public string Pattern
         {
             get { return _pattern; }
@@ -99,9 +87,9 @@ namespace Write_Wash.ViewModels
                 UpdateProduct();
             }
         }
-        
+
         public int SelectedProduct { get; set; }
-        
+
         private string _SelectedSort { get; set; }
 
         public string SelectedSort
@@ -175,65 +163,6 @@ namespace Write_Wash.ViewModels
             Global.Cart = new List<OrderProduct>();
             _pageService.ChangePage(new SignView());
         });
-        public DelegateCommand BasketOpen => new(() =>
-        {
-            _pageService.ChangePage(new ProductOrder());
-
-
-        });
-        public DelegateCommand AddToOrder => new(() =>
-        {
-            if (Products.Count > 0)
-            {
-                if (Global.Cart.Count() > 0)
-                {
-                    int k = 0;
-                    foreach (OrderProduct p in Global.Cart.ToList())
-                    {
-                        if (p.ProductArticleNumber == Products[SelectedProduct].ProductArticleNumber)
-                        {
-                            p.ProductCount++;
-
-                        }
-                        else
-                        {
-                            k++;
-                        }
-                        
-                    }
-                    if (k == Global.Cart.ToList().Count())
-                    {
-                        Global.Cart.Add(new OrderProduct
-                        {
-                            OrderId = _context.Order.Max(o => o.OrderID) + 1,
-                            ProductArticleNumber = Products[SelectedProduct].ProductArticleNumber,
-                            ProductCount = 1
-                        });
-                        OrderProductCount = Global.Cart.Count().ToString();
-                        
-                    }
-                }
-                else
-                {
-                    Global.Cart.Add(new OrderProduct
-                    {
-                        OrderId = _context.Order.Max(o => o.OrderID) + 1,
-                        ProductArticleNumber = Products[SelectedProduct].ProductArticleNumber,
-                        ProductCount = 1
-                    });
-                    OrderProductCount = Global.Cart.Count().ToString();
-                    
-                    
-                }
-                OrderEllipseCheck();
-
-            }
-            
-
-        });
-        void OrderEllipseCheck()
-        {
-            if(Global.Cart.Count() > 0) { OrderEllipse = Visibility.Visible; BasketVisible = Visibility.Visible; } else { OrderEllipse = Visibility.Collapsed; BasketVisible = Visibility.Collapsed; }
-        }
+        public DelegateCommand AdminOrder => new(() => { _pageService.ChangePage(new AdminBrowseOrder()); });
     }
 }

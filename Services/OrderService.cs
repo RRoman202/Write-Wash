@@ -17,46 +17,47 @@ namespace Write_Wash.Services
         }
         public async void NewOrder()
         {
+            
+            int orderNumber = _context.Order.Max(o => o.OrderID) + 1;
+            int receiptСode = _context.Order.Max(o => o.OrderCode) + 1;
 
-            int orderNumber = _context.order1.Max(o => o.OrderID) + 1;
-            int receiptСode = _context.order1.Max(o => o.OrderCode) + 1;
-
-            await _context.order1.AddAsync(new OrderContext
+            await _context.Order.AddAsync(new OrderContext
             {
                 OrderID = orderNumber,
                 OrderStatus = "Новый",
-                OrderDate1 = DateTime.Now,
-                OrderDate2 = DateTime.Now.AddYears(6),
+                OrderDate1 = "",
+                OrderDate2 = "",
                 OrderPickupPoint = 1,
                 FIO = Global.CurrentUser != null ? $"{Global.CurrentUser.Surname} {Global.CurrentUser.Name} {Global.CurrentUser.Patronymic}" : null,
                 OrderCode = receiptСode
             });
 
             await _context.SaveChangesAsync();
-            //List<OrderProductContext> orderproductList = new List<OrderProductContext>();
-            //foreach (Product cartItem in Global.OrderProductList)
-            //{
-            //    orderproductList.Add(new OrderProductContext
-            //    {
-            //        OrderID = orderNumber,
-            //        ProductArticleNumber = cartItem.ProductArticleNumber,
-            //        ProductCount = cartItem.ProductCount
-            //    });
-            //}
+            
+            foreach (OrderProduct cartItem in Global.Cart)
+            {
+                _context.Orderproduct.AsNoTracking();
+                _context.Orderproduct.Add(new OrderProductContext
+                {
+                    OrderID = orderNumber,
+                    ProductArticleNumber = cartItem.ProductArticleNumber,
+                    ProductCount = cartItem.ProductCount
+                });
+                _context.SaveChanges();
+            }
 
-            //foreach (Product cartItem in Global.OrderProductList)
-            //{
-            //    ProductContext? product = await _context.Product.Where(p => p.ProductArticleNumber == cartItem.ProductArticleNumber).SingleOrDefaultAsync();
+            foreach (OrderProduct cartItem in Global.Cart)
+            {
+                ProductContext? product = await _context.Product.Where(p => p.ProductArticleNumber == cartItem.ProductArticleNumber).SingleOrDefaultAsync();
 
-            //    if (product != null)
-            //    {
-            //        product.ProductQuantityInStock -= cartItem.ProductCount;
-            //    }
-            //}
-            //await _context.orderproduct.AddRangeAsync(orderproductList);
+                if (product != null)
+                {
+                    product.ProductQuantityInStock -= cartItem.ProductCount;
+                }
+            }
 
 
-            //await _context.SaveChangesAsync();
+            await _context.SaveChangesAsync();
         }
     }
 }

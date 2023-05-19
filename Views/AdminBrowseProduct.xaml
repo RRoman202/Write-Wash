@@ -1,19 +1,19 @@
-﻿<Page x:Class="Write_Wash.Views.BrowseProduct"
+﻿<Page x:Class="Write_Wash.Views.AdminBrowseProduct"
       xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
-      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
       xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
-      DataContext="{Binding BrowseProductViewModel, Source={StaticResource ViewModelLocator}}"
-      xmlns:local="clr-namespace:Write_Wash.Views" xmlns:sys="clr-namespace:System;assembly=netstandard"
+      DataContext="{Binding AdminBrowseProductViewModel, Source={StaticResource ViewModelLocator}}"
+      xmlns:local="clr-namespace:Write_Wash.Views"
       mc:Ignorable="d" 
       d:DesignHeight="450" d:DesignWidth="800"
-      Title="BrowseProduct"
-      Background="White">
+      Title="AdminBrowseProduct" Background="White">
 
     <Grid>
         <Grid.RowDefinitions>
+            <RowDefinition Height="auto"></RowDefinition>
+            <RowDefinition Height="auto"></RowDefinition>
             <RowDefinition Height="auto"></RowDefinition>
             <RowDefinition Height="*"></RowDefinition>
         </Grid.RowDefinitions>
@@ -48,7 +48,7 @@
                       SelectedItem="{Binding SelectedSort}"
                       
                       >
-                
+
 
 
             </ComboBox>
@@ -59,7 +59,7 @@
                       ItemsSource="{Binding Filtre}"
                       Style="{StaticResource pwsComboBox}"
                       SelectedItem="{Binding SelectedFiltre}">
-                
+
             </ComboBox>
             <WrapPanel Grid.Column="3" VerticalAlignment="Center" 
                        HorizontalAlignment="Center"
@@ -87,7 +87,7 @@
                               Header="{Binding FullName}"
                               IsEnabled="False"
                               Opacity="1">
-                        
+
                     </MenuItem>
                     <Separator Style="{StaticResource MaterialDesignLightSeparator}"
                                Margin="10 0 10 0"></Separator>
@@ -98,16 +98,28 @@
                     <MenuItem Header="Выйти"
                               Command="{Binding SignOutCommand}"
                               FontSize="14">
-                        
+
                     </MenuItem>
-                    
+
                 </MenuItem>
                 <Menu.Resources>
                     <SolidColorBrush x:Key="MaterialDesignPaper" Color="{StaticResource pwsAccentedColor}"></SolidColorBrush>
                 </Menu.Resources>
             </Menu>
         </Grid>
-        <Border Grid.Row="1" 
+        <Grid Grid.Row="1">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition></ColumnDefinition>
+                <ColumnDefinition></ColumnDefinition>
+                <ColumnDefinition></ColumnDefinition>
+                
+            </Grid.ColumnDefinitions>
+            <Button Grid.Column="0" Margin="10" FontFamily="{StaticResource pwsFont}" Command="{Binding AdminOrder}">Заказы</Button>
+            <Button Grid.Column="1" Margin="10" FontFamily="{StaticResource pwsFont}">Производители</Button>
+            <Button Grid.Column="2" Margin="10" FontFamily="{StaticResource pwsFont}">Поставщики</Button>
+        </Grid>
+        <Button Grid.Row="2" Width="300">Добавить товар</Button>
+        <Border Grid.Row="3" 
                 Background="{StaticResource pwsAccentedBg}"
                 HorizontalAlignment="Center"
                 VerticalAlignment="Center"
@@ -121,7 +133,7 @@
                        FontFamily="{StaticResource pwsFont}"
                        FontSize="30"></TextBlock>
         </Border>
-        <Grid Grid.Row="1">
+        <Grid Grid.Row="3">
             <ListBox FontFamily="{StaticResource pwsFont}"
                       ItemsSource="{Binding Products}"
                      SelectedIndex="{Binding SelectedProduct}"
@@ -131,7 +143,7 @@
                       ScrollViewer.HorizontalScrollBarVisibility="Disabled"
                      ScrollViewer.CanContentScroll="False"
                      
-                     Focusable="False" SelectionChanged="ListBox_SelectionChanged"
+                     Focusable="False" 
                      
                      >
                 <ListBox.ContextMenu>
@@ -140,7 +152,16 @@
                                               FontFamily="{StaticResource pwsFont}"
                                               Foreground="{StaticResource pwsAccentedBg}"
                                               Command="{Binding AddToOrder}"></MenuItem>
-                        
+                        <MenuItem Header="Удалить"
+                                              Visibility="{Binding menuitems}"
+                                              FontFamily="{StaticResource pwsFont}"
+                                              Foreground="{StaticResource pwsAccentedBg}"
+                                              Command="{Binding AddToOrder}"></MenuItem>
+                        <MenuItem Header="Редактировать"
+                                              Visibility="{Binding menuitems}"
+                                              FontFamily="{StaticResource pwsFont}"
+                                              Foreground="{StaticResource pwsAccentedBg}"
+                                              Command="{Binding AddToOrder}"></MenuItem>
                     </ContextMenu>
                 </ListBox.ContextMenu>
                 <ListBox.ItemsPanel>
@@ -148,7 +169,7 @@
                         <VirtualizingStackPanel IsItemsHost="True" Orientation="Vertical" HorizontalAlignment="Stretch" ></VirtualizingStackPanel>
                     </ItemsPanelTemplate>
                 </ListBox.ItemsPanel>
-                
+
                 <ListBox.ItemTemplate>
                     <DataTemplate>
                         <materialDesign:Card Background="{Binding CurrentDiscount, Converter={StaticResource StringToBrushConverter}}"
@@ -157,7 +178,7 @@
                                              HorizontalAlignment="Stretch"
                                              
                                              >
-                            
+
                             <Grid HorizontalAlignment="Stretch"
                                   VerticalAlignment="Center">
                                 <Grid.ColumnDefinitions>
@@ -165,7 +186,7 @@
                                     <ColumnDefinition Width="3*"></ColumnDefinition>
                                     <ColumnDefinition Width="*"></ColumnDefinition>
                                 </Grid.ColumnDefinitions>
-                                
+
                                 <Border Grid.Column="0" 
                                         VerticalAlignment="Center" 
                                         HorizontalAlignment="Center"
@@ -182,7 +203,7 @@
                                        Height="125"
                                        Margin="10 0 10 0"></Image>
                                 </Border>
-                                
+
                                 <Grid Grid.Column="1"
                                       HorizontalAlignment="Stretch"
                                       
@@ -206,9 +227,9 @@
                                                Text="{Binding ProductCost, StringFormat={}{0:C}, ConverterCulture=ru-RU}" TextDecorations="{Binding CurrentDiscount, Converter={StaticResource ValueToTextDecorationsConverter}}"></TextBlock>
                                         <TextBlock Text="{Binding DisplayedPrice, StringFormat={}{0:C}, ConverterCulture=ru-RU, Mode=OneWay}" Margin="10 0 0 0"></TextBlock>
                                     </WrapPanel>
-                                    
+
                                 </Grid>
-                                
+
                                 <WrapPanel Grid.Column="2" 
                                            VerticalAlignment="Center"
                                            HorizontalAlignment="Stretch"
@@ -220,9 +241,9 @@
                                            ></TextBlock>
                                     <TextBlock Text="%"></TextBlock>
                                 </WrapPanel>
-                                
+
                             </Grid>
-                            
+
                         </materialDesign:Card>
                     </DataTemplate>
                 </ListBox.ItemTemplate>

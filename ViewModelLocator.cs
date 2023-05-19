@@ -19,6 +19,9 @@ namespace Write_Wash
             services.AddTransient<BrowseProductViewModel>();
             services.AddTransient<ProductOrderViewModel>();
             services.AddTransient<RegistrationViewModel>();
+            services.AddTransient<AdminBrowseProductViewModel>();
+            services.AddTransient<AdminBrowseOrderViewModel>();
+
 
             #endregion
 
@@ -54,7 +57,9 @@ namespace Write_Wash
             services.AddSingleton<UserService>();
             services.AddSingleton<ProductService>();
             services.AddSingleton<PointService>();
-            services.AddSingleton<OrderService>();
+            services.AddScoped<OrderService>();
+            services.AddSingleton<AdminService>();
+            
 
 
             #endregion
@@ -71,6 +76,7 @@ namespace Write_Wash
         public BrowseProductViewModel BrowseProductViewModel => _provider.GetRequiredService<BrowseProductViewModel>();
         public ProductOrderViewModel ProductOrderViewModel => _provider.GetRequiredService<ProductOrderViewModel>();
         public RegistrationViewModel RegistrationViewModel => _provider.GetRequiredService<RegistrationViewModel>();
-
+        public AdminBrowseProductViewModel AdminBrowseProductViewModel => _provider.GetRequiredService<AdminBrowseProductViewModel>();
+        public AdminBrowseOrderViewModel AdminBrowseOrderViewModel => _provider.GetRequiredService<AdminBrowseOrderViewModel>();
     }
 }

@@ -19,9 +19,9 @@ namespace Write_Wash.Data
 
         public DbSet<PointContext> Point { get; set; }
 
-        public DbSet<OrderProductContext> orderproduct { get; set; }
+        public DbSet<OrderProductContext> Orderproduct { get; set; }
 
-        public DbSet<OrderContext> order1 { get; set; }
+        public DbSet<OrderContext> Order { get; set; }
         
         public DataContext(DbContextOptions<DataContext> options)
             : base(options) { }
