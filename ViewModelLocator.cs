@@ -57,7 +57,7 @@ namespace Write_Wash
             services.AddSingleton<UserService>();
             services.AddSingleton<ProductService>();
             services.AddSingleton<PointService>();
-            services.AddScoped<OrderService>();
+            services.AddTransient<OrderService>();
             services.AddSingleton<AdminService>();
             
 

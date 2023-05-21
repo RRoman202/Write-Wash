@@ -12,15 +12,15 @@ namespace Write_Wash.ViewModels
     {
         public event PropertyChangedEventHandler PropertyChanged;
         private readonly PageService _pageService;
-        
+        public int SelectedProduct { get; set; }
         private readonly AdminService _adminService;
         public List<Order> Orders { get; set; }
         private readonly DataContext _context;
-       
-
+        public List<Product> Fullorder { get; set; }
+        public Visibility VisibleFullOrder { get; set; } = Visibility.Hidden;
         public string _pattern;
-
-        
+        public int ListOrderSpan { get; set; } = 2;
+        public int CodeOrder { get; set; }
         public string OrderProductCount { get; set; }
 
         
@@ -60,6 +60,18 @@ namespace Write_Wash.ViewModels
         public DelegateCommand GoProduct => new(() =>
         {
             _pageService.ChangePage(new AdminBrowseProduct());
+        });
+        public DelegateCommand FullOrder => new(() =>
+        {
+            Fullorder = Orders[SelectedProduct].products;
+            CodeOrder = Orders[SelectedProduct].OrderCode;
+            VisibleFullOrder = Visibility.Visible;
+            ListOrderSpan = 1;
+        });
+        public DelegateCommand FullOrderHidden => new(() =>
+        {
+            VisibleFullOrder = Visibility.Hidden;
+            ListOrderSpan = 2;
         });
     }
 }

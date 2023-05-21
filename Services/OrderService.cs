@@ -32,18 +32,19 @@ namespace Write_Wash.Services
                 OrderCode = receiptСode
             });
 
-            await _context.SaveChangesAsync();
-            
+
+            List<OrderProductContext> orderproductList = new List<OrderProductContext>();
             foreach (OrderProduct cartItem in Global.Cart)
             {
-                _context.Orderproduct.AsNoTracking();
-                _context.Orderproduct.Add(new OrderProductContext
+               
+                orderproductList.Add(new OrderProductContext
                 {
                     OrderID = orderNumber,
                     ProductArticleNumber = cartItem.ProductArticleNumber,
                     ProductCount = cartItem.ProductCount
                 });
-                _context.SaveChanges();
+
+                
             }
 
             foreach (OrderProduct cartItem in Global.Cart)
@@ -56,7 +57,7 @@ namespace Write_Wash.Services
                 }
             }
 
-
+            await _context.Orderproduct.AddRangeAsync(orderproductList);
             await _context.SaveChangesAsync();
         }
     }

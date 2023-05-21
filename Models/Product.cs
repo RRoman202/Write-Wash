@@ -19,11 +19,46 @@ namespace Write_Wash.Models
             {
                 if (CurrentDiscount != 0)
                 {
-                    return ProductCost - (ProductCost * CurrentDiscount / 100);
+                    return (float)((float)ProductCost - ((float)ProductCost * (float)CurrentDiscount / 100));
                 }
                 else { return null; }
             }
         }
         public int ProductCount { get; set; }
+        public float? FullPrice
+        {
+            get
+            {
+                if(ProductCount != 0)
+                {
+                    return ProductCost * ProductCount;
+                }
+                else
+                {
+                    return ProductCost;
+                }
+            }
+        }
+        public float? FullPriceDisc
+        {
+            get
+            {
+                if(CurrentDiscount != 0)
+                {
+                    if (ProductCount != 0)
+                    {
+                        return DisplayedPrice * ProductCount;
+                    }
+                    else
+                    {
+                        return DisplayedPrice;
+                    }
+                }
+                else
+                {
+                    return ProductCost;
+                }
+            }
+        }
     }
 }
