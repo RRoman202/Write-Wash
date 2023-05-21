@@ -160,5 +160,21 @@ namespace Write_Wash.Services
             }
             return discprice;
         }
+        public async void ChangeOrder(Order order)
+        {
+            
+            OrderContext newOrder = await _context.Order.Where(o => o.OrderID == order.OrderID).FirstOrDefaultAsync();
+            
+            if (newOrder != null)
+            {
+                
+                newOrder.OrderDate2 = order.OrderDate2;
+                newOrder.OrderStatus = order.OrderStatus;
+                _context.Order.Update(newOrder);
+                await _context.SaveChangesAsync();
+                _context.Entry<OrderContext>(newOrder).State = EntityState.Detached;
+
+            }
+        }
     }
 }

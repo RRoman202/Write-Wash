@@ -16,15 +16,13 @@ using System.Windows.Shapes;
 namespace Write_Wash.Views
 {
     /// <summary>
-    /// Логика взаимодействия для AdminBrowseOrder.xaml
+    /// Логика взаимодействия для ChangeOrder.xaml
     /// </summary>
-    public partial class AdminBrowseOrder : Page
+    public partial class ChangeOrder : Page
     {
-        public AdminBrowseOrder()
+        public ChangeOrder()
         {
             InitializeComponent();
         }
-
-        
     }
 }

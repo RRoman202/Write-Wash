@@ -21,6 +21,7 @@ namespace Write_Wash
             services.AddTransient<RegistrationViewModel>();
             services.AddTransient<AdminBrowseProductViewModel>();
             services.AddTransient<AdminBrowseOrderViewModel>();
+            services.AddTransient<ChangeOrderViewModel>();
 
 
             #endregion
@@ -78,5 +79,6 @@ namespace Write_Wash
         public RegistrationViewModel RegistrationViewModel => _provider.GetRequiredService<RegistrationViewModel>();
         public AdminBrowseProductViewModel AdminBrowseProductViewModel => _provider.GetRequiredService<AdminBrowseProductViewModel>();
         public AdminBrowseOrderViewModel AdminBrowseOrderViewModel => _provider.GetRequiredService<AdminBrowseOrderViewModel>();
+        public ChangeOrderViewModel ChangeOrderViewModel => _provider.GetRequiredService<ChangeOrderViewModel>();
     }
 }

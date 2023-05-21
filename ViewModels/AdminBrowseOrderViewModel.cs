@@ -91,5 +91,14 @@ namespace Write_Wash.ViewModels
             FullOrderSpan = 2;
             VisibleOrderList = Visibility.Hidden;
         });
+        public DelegateCommand ChangeOrder => new(() =>
+        {
+            if(SelectedProduct != null)
+            {
+                Global.order = Orders[SelectedProduct];
+                _pageService.ChangePage(new ChangeOrder());
+            }
+            
+        });
     }
 }

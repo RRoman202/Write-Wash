@@ -25,8 +25,8 @@ namespace Write_Wash.Services
             {
                 OrderID = orderNumber,
                 OrderStatus = "Новый",
-                OrderDate1 = DateTime.Now.ToString(),
-                OrderDate2 = DateTime.Now.AddDays(6).ToString(),
+                OrderDate1 = DateTime.Now,
+                OrderDate2 = DateTime.Now.AddDays(6),
                 OrderPickupPoint = 1,
                 FIO = Global.CurrentUser != null ? $"{Global.CurrentUser.Surname} {Global.CurrentUser.Name} {Global.CurrentUser.Patronymic}" : null,
                 OrderCode = receiptСode

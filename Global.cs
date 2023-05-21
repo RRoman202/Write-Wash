@@ -18,6 +18,7 @@ namespace Write_Wash
             Role = 0
         };
         public static List<OrderProduct> Cart { get; set; } = new List<OrderProduct>();
+        public static Order order { get; set; } = new Order();
         
     }
 }

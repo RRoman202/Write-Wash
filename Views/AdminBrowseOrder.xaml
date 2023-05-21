@@ -124,6 +124,7 @@
             <ListBox FontFamily="{StaticResource pwsFont}"
                       ItemsSource="{Binding Orders}"
                       SelectedIndex="{Binding SelectedProduct}"
+                     
                       Grid.Column="0"
                      Visibility="{Binding VisibleOrderList}"
                      Grid.ColumnSpan="{Binding ListOrderSpan}"
@@ -138,9 +139,18 @@
                      >
                 <ListBox.ContextMenu>
                     <ContextMenu>
-                        
+                        <MenuItem Header="Редактировать"
+                                              FontFamily="{StaticResource pwsFont}"
+                                              Foreground="{StaticResource pwsAccentedBg}"
+                                              Command="{Binding ChangeOrder}"></MenuItem>
+                        <MenuItem Header="Состав заказа"
+                                              FontFamily="{StaticResource pwsFont}"
+                                              Foreground="{StaticResource pwsAccentedBg}"
+                                              Command="{Binding FullOrder}"></MenuItem>
+
                     </ContextMenu>
                 </ListBox.ContextMenu>
+                
                 <ListBox.ItemsPanel>
                     <ItemsPanelTemplate>
                         <VirtualizingStackPanel IsItemsHost="True" Orientation="Vertical" HorizontalAlignment="Stretch" ></VirtualizingStackPanel>
@@ -190,14 +200,12 @@
                                                Text="{Binding OrderStatus}"></TextBlock>
                                     </WrapPanel>
                                     <WrapPanel Grid.Row="1">
-                                        <TextBlock Text="Дата заказа: "></TextBlock>
                                         <TextBlock Grid.Row="1"
-                                               Text="{Binding OrderDate1}"></TextBlock>
+                                               Text="{Binding OrderDate1 ,StringFormat='Дата заказа: {0:dd.MM.yyyy}'}"></TextBlock>
                                     </WrapPanel>
                                     <WrapPanel Grid.Row="2">
-                                        <TextBlock Text="Дата доставки: "></TextBlock>
                                         <TextBlock Grid.Row="2"
-                                               Text="{Binding OrderDate2}"></TextBlock>
+                                               Text="{Binding OrderDate2 ,StringFormat='Дата доставки: {0:dd.MM.yyyy}'}"></TextBlock>
                                     </WrapPanel>
                                     
                                     <WrapPanel Grid.Row="3">
