@@ -9,8 +9,9 @@ namespace Write_Wash.Models.DBContext
     public class OrderProductContext
     {
         [Key]
-        public int OrderID { get; set; }
+        public int OrderproductID { get; set; }
         public string ProductArticleNumber { get; set; }
         public int ProductCount { get; set; }
+        public int OrderID { get; set; }
     }
 }

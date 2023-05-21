@@ -8,8 +8,9 @@ namespace Write_Wash.Models
 {
     public class OrderProduct
     {
-        public int OrderId { get; set; }
+        public int OrderproductID { get; set; }
         public string ProductArticleNumber { get; set; }
         public int ProductCount { get; set; }
+        public int OrderID { get; set; }
     }
 }

@@ -86,7 +86,8 @@ namespace Write_Wash.Services
                                         ProductCost = item.ProductCost,
                                         CurrentDiscount = item.CurrentDiscount,
                                         ProductArticleNumber = item.ProductArticleNumber,
-                                        ProductCount = ord.ProductCount
+                                        ProductCount = ord.ProductCount,
+                                        ProductQuantityInStock = item.ProductQuantityInStock
 
                                     });
                                 }

@@ -125,6 +125,7 @@
                       ItemsSource="{Binding Orders}"
                       SelectedIndex="{Binding SelectedProduct}"
                       Grid.Column="0"
+                     Visibility="{Binding VisibleOrderList}"
                      Grid.ColumnSpan="{Binding ListOrderSpan}"
                      x:Name="list"
                       HorizontalAlignment="Stretch"
@@ -200,8 +201,8 @@
                                     </WrapPanel>
                                     
                                     <WrapPanel Grid.Row="3">
-                                        <TextBlock Text="Код заказа: "></TextBlock>
-                                        <TextBlock Text="{Binding OrderCode}"></TextBlock>
+                                        <TextBlock Text="Номер заказа: "></TextBlock>
+                                        <TextBlock Text="{Binding OrderID}"></TextBlock>
                                     </WrapPanel>
 
                                 </Grid>
@@ -213,15 +214,16 @@
                                     </Grid.RowDefinitions>
                                     <WrapPanel Grid.Row="0" HorizontalAlignment="Stretch" VerticalAlignment="Center">
                                         <TextBlock Text="Цена без скидки: "></TextBlock>
-                                        <TextBlock Text="{Binding fullPrice}"></TextBlock>
+                                        <TextBlock Text="{Binding fullPrice, StringFormat={}{0:C}, ConverterCulture=ru-RU}"></TextBlock>
                                     </WrapPanel>
                                     <WrapPanel Grid.Row="1" HorizontalAlignment="Stretch" VerticalAlignment="Center">
                                         <TextBlock Text="Цена со скидкой: "></TextBlock>
-                                        <TextBlock Text="{Binding discountPrice}"></TextBlock>
+                                        <TextBlock Text="{Binding discountPrice, StringFormat={}{0:C}, ConverterCulture=ru-RU}"></TextBlock>
                                     </WrapPanel>
                                     <WrapPanel Grid.Row="2" HorizontalAlignment="Stretch" VerticalAlignment="Center">
                                         <TextBlock Text="Общая скидка: "></TextBlock>
                                         <TextBlock Text="{Binding discount}"></TextBlock>
+                                        <TextBlock Text="%"></TextBlock>
                                     </WrapPanel>
                                 </Grid>
                                 <Grid Grid.Column="3">
@@ -245,10 +247,11 @@
                     </DataTemplate>
                 </ListBox.ItemTemplate>
             </ListBox>
-            <Grid Grid.Column="1" Visibility="{Binding VisibleFullOrder}">
+            <Grid Grid.Column="{Binding FullOrderColumn}" Grid.ColumnSpan="{Binding FullOrderSpan}" Visibility="{Binding VisibleFullOrder}">
                 <Grid.RowDefinitions>
                     <RowDefinition></RowDefinition>
                     <RowDefinition Height="8*"></RowDefinition>
+                    <RowDefinition></RowDefinition>
                     <RowDefinition></RowDefinition>
                 </Grid.RowDefinitions>
                 <Grid Grid.Row="0">
@@ -257,7 +260,11 @@
                         <RowDefinition></RowDefinition>
                     </Grid.RowDefinitions>
                     <WrapPanel Grid.Row="0">
-                        <TextBlock Text="Код заказа: " FontFamily="{StaticResource pwsFont}" FontSize="20"></TextBlock>
+                        <TextBlock Text="Номер заказа: " FontFamily="{StaticResource pwsFont}" FontSize="20"></TextBlock>
+                        <TextBlock Text="{Binding NumberOrder}" FontFamily="{StaticResource pwsFont}" FontSize="20"></TextBlock>
+                    </WrapPanel>
+                    <WrapPanel Grid.Row="1">
+                        <TextBlock Text="Код получения: " FontFamily="{StaticResource pwsFont}" FontSize="20"></TextBlock>
                         <TextBlock Text="{Binding CodeOrder}" FontFamily="{StaticResource pwsFont}" FontSize="20"></TextBlock>
                     </WrapPanel>
                 </Grid>
@@ -334,9 +341,14 @@
                                             <RowDefinition Height="auto"></RowDefinition>
                                             <RowDefinition Height="auto"></RowDefinition>
                                         </Grid.RowDefinitions>
-                                        <TextBlock Grid.Row="0"
+                                        <WrapPanel Grid.Row="0">
+                                            <TextBlock Grid.Row="0"
                                                FontWeight="Bold"
                                                Text="{Binding ProductName}"></TextBlock>
+                                            <TextBlock Text="  Артикул: "></TextBlock>
+                                            <TextBlock Text="{Binding ProductArticleNumber}"></TextBlock>
+                                        </WrapPanel>
+                                        
                                         <TextBlock Grid.Row="1"
                                                Text="{Binding ProductDescription}"></TextBlock>
                                         <TextBlock Grid.Row="2"
@@ -365,6 +377,7 @@
                                         <Grid.RowDefinitions>
                                             <RowDefinition></RowDefinition>
                                             <RowDefinition></RowDefinition>
+                                            <RowDefinition></RowDefinition>
                                         </Grid.RowDefinitions>
                                         <WrapPanel Grid.Column="2" Grid.Row="0"
                                            VerticalAlignment="Center"
@@ -381,6 +394,10 @@
                                             <TextBlock Text="Количество: "></TextBlock>
                                             <TextBlock Text="{Binding ProductCount}"></TextBlock>
                                         </WrapPanel>
+                                        <WrapPanel Grid.Row="2">
+                                            <TextBlock Text="Осталось на складе: "></TextBlock>
+                                            <TextBlock Text="{Binding ProductQuantityInStock}"></TextBlock>
+                                        </WrapPanel>
                                     </Grid>
                                     
 
@@ -390,7 +407,15 @@
                         </DataTemplate>
                     </ListBox.ItemTemplate>
                 </ListBox>
-                <Button Grid.Row="2" FontFamily="{StaticResource pwsFont}" Command="{Binding FullOrderHidden}">Скрыть</Button>
+                <WrapPanel Grid.Row="2">
+                    <TextBlock Text="Стоимость: " FontSize="20" FontFamily="{StaticResource pwsFont}"></TextBlock>
+                    <TextBlock Grid.Row="2" FontFamily="{StaticResource pwsFont}" FontSize="20" Text="{Binding FullPriceOrder, StringFormat={}{0:C}, ConverterCulture=ru-RU}"></TextBlock>
+                </WrapPanel>
+                <WrapPanel Grid.Row="3">
+                    <Button Grid.Row="3" FontFamily="{StaticResource pwsFont}" Command="{Binding FullOrderHidden}">Скрыть</Button>
+                    <Button FontFamily="{StaticResource pwsFont}" Command="{Binding FullSize}" Margin="20 0 0 0">На полный экран</Button>
+                </WrapPanel>
+                
             </Grid>
             
         </Grid>

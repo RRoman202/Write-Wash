@@ -18,10 +18,16 @@ namespace Write_Wash.ViewModels
         private readonly DataContext _context;
         public List<Product> Fullorder { get; set; }
         public Visibility VisibleFullOrder { get; set; } = Visibility.Hidden;
+        public Visibility VisibleOrderList { get; set; } = Visibility.Visible;
         public string _pattern;
         public int ListOrderSpan { get; set; } = 2;
+        public int NumberOrder { get; set; }
         public int CodeOrder { get; set; }
+        public float? FullPriceOrder { get; set; }
         public string OrderProductCount { get; set; }
+
+        public int FullOrderColumn { get; set; } = 1;
+        public int FullOrderSpan { get; set; } = 1;
 
         
 
@@ -64,14 +70,26 @@ namespace Write_Wash.ViewModels
         public DelegateCommand FullOrder => new(() =>
         {
             Fullorder = Orders[SelectedProduct].products;
+            NumberOrder = Orders[SelectedProduct].OrderID;
             CodeOrder = Orders[SelectedProduct].OrderCode;
+            FullPriceOrder = Orders[SelectedProduct].discountPrice;
             VisibleFullOrder = Visibility.Visible;
             ListOrderSpan = 1;
+            
         });
         public DelegateCommand FullOrderHidden => new(() =>
         {
             VisibleFullOrder = Visibility.Hidden;
             ListOrderSpan = 2;
+            FullOrderColumn = 1;
+            FullOrderSpan = 1;
+            VisibleOrderList = Visibility.Visible;
+        });
+        public DelegateCommand FullSize => new(() =>
+        {
+            FullOrderColumn = 0;
+            FullOrderSpan = 2;
+            VisibleOrderList = Visibility.Hidden;
         });
     }
 }

@@ -205,7 +205,7 @@ namespace Write_Wash.ViewModels
                     {
                         Global.Cart.Add(new OrderProduct
                         {
-                            OrderId = _context.Order.Max(o => o.OrderID) + 1,
+                            OrderID = _context.Order.Max(o => o.OrderID) + 1,
                             ProductArticleNumber = Products[SelectedProduct].ProductArticleNumber,
                             ProductCount = 1
                         });
@@ -217,7 +217,7 @@ namespace Write_Wash.ViewModels
                 {
                     Global.Cart.Add(new OrderProduct
                     {
-                        OrderId = _context.Order.Max(o => o.OrderID) + 1,
+                        OrderID = _context.Order.Max(o => o.OrderID) + 1,
                         ProductArticleNumber = Products[SelectedProduct].ProductArticleNumber,
                         ProductCount = 1
                     });
