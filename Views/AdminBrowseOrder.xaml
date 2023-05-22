@@ -25,19 +25,12 @@
                 <ColumnDefinition Width="*"></ColumnDefinition>
                 <ColumnDefinition Width="*"></ColumnDefinition>
             </Grid.ColumnDefinitions>
-            <TextBox Grid.Column="0"
-                     Margin="5"
-                     FontFamily="Comic Sans MS"
-                     VerticalAlignment="Bottom"
-                     Text="{Binding Pattern, UpdateSourceTrigger=PropertyChanged}"
-                     Style="{StaticResource pwsTextBox}"
-                     materialDesign:HintAssist.Hint="Поиск..."
-                     >
+            
 
 
 
 
-            </TextBox>
+            
             <ComboBox Grid.Column="1"
                       Margin="5"
                       VerticalAlignment="Bottom"

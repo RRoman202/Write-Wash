@@ -63,6 +63,7 @@
                       materialDesign:HintAssist.Hint="Пункт выдачи"
                       ItemsSource="{Binding Points}"
                       Style="{StaticResource pwsComboBox}"
+                      SelectedItem="{Binding SelectedPoint}"
                       >
                 <ComboBox.ItemTemplate>
                     <DataTemplate>

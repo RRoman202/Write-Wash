@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Org.BouncyCastle.Asn1.Mozilla;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -19,6 +20,7 @@ namespace Write_Wash
         };
         public static List<OrderProduct> Cart { get; set; } = new List<OrderProduct>();
         public static Order order { get; set; } = new Order();
+        public static Points point { get; set; } = new Points();
         
     }
 }

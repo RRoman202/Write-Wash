@@ -21,7 +21,7 @@ namespace Write_Wash.ViewModels
         public int MaxProd { get; set; }
         public int CurrentProd { get; set; }
 
-        
+        public Points SelectedPoint { get; set; }
         public List<Points> Points { get; set; }
 
         public string _pattern;
@@ -48,7 +48,7 @@ namespace Write_Wash.ViewModels
                 Points = await _pointService.GetPoints();
                 
                 Products = await _productService.GetCart();
-                
+                SelectedPoint = Points[0];
                 MaxProd = Products.Count();
                 CurrentProd = Products.Count();
                 SumOrder = CheckSumOrder().ToString();
@@ -225,6 +225,7 @@ namespace Write_Wash.ViewModels
         });
         public DelegateCommand OrderBut => new DelegateCommand(() =>
         {
+            Global.point = SelectedPoint;
             _orderService.NewOrder();
         });
         public DelegateCommand Pdf => new DelegateCommand(() =>
