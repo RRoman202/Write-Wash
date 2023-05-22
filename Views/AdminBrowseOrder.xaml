@@ -31,7 +31,7 @@
 
 
             
-            <ComboBox Grid.Column="1"
+            <ComboBox Grid.Column="0"
                       Margin="5"
                       VerticalAlignment="Bottom"
                       materialDesign:HintAssist.Hint="Сортировка..."
@@ -44,13 +44,24 @@
 
 
             </ComboBox>
-            <ComboBox Grid.Column="2"
+            <ComboBox Grid.Column="1"
                       Margin="5"
                       VerticalAlignment="Bottom"
-                      materialDesign:HintAssist.Hint="Фильтрация..."
+                      materialDesign:HintAssist.Hint="Фильтрация по скидке"
                       ItemsSource="{Binding Filtre}"
                       Style="{StaticResource pwsComboBox}"
                       SelectedItem="{Binding SelectedFiltre}">
+                
+
+            </ComboBox>
+            <ComboBox Grid.Column="2"
+                      Margin="5"
+                      VerticalAlignment="Bottom"
+                      materialDesign:HintAssist.Hint="Фильтрация по статусу"
+                      ItemsSource="{Binding FiltreStatus}"
+                      Style="{StaticResource pwsComboBox}"
+                      SelectedItem="{Binding SelectedFiltreStatus}">
+
 
             </ComboBox>
             <WrapPanel Grid.Column="3" VerticalAlignment="Center" 
@@ -143,7 +154,17 @@
 
                     </ContextMenu>
                 </ListBox.ContextMenu>
-                
+
+
+                <ListBox.ItemContainerStyle>
+                    <Style TargetType="ListBoxItem">
+                        <Style.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter Property="IsSelected" Value="True"/>
+                            </Trigger>
+                        </Style.Triggers>
+                    </Style>
+                </ListBox.ItemContainerStyle>
                 <ListBox.ItemsPanel>
                     <ItemsPanelTemplate>
                         <VirtualizingStackPanel IsItemsHost="True" Orientation="Vertical" HorizontalAlignment="Stretch" ></VirtualizingStackPanel>

@@ -34,7 +34,7 @@ namespace Write_Wash.ViewModels
         public int FullOrderSpan { get; set; } = 1;
         public ObservableCollection<string> Sorts { get; set; }
         public ObservableCollection<string> Filtre { get; set; }
-
+        public ObservableCollection<string> FiltreStatus { get; set; }
 
         public string FullName { get; set; } = Global.CurrentUser.Name == string.Empty ? "Гость" : $"{Global.CurrentUser.Surname} {Global.CurrentUser.Name} {Global.CurrentUser.Patronymic}";
 
@@ -66,6 +66,12 @@ namespace Write_Wash.ViewModels
                 new string("0 - 9,99%"),
                 new string("10 - 14,99%"),
                 new string("15% и более")
+            };
+            FiltreStatus = new ObservableCollection<string>
+            {
+                new string("Все статусы"),
+                new string("Новые"),
+                new string("Завершенные"),
             };
 
 
@@ -141,6 +147,18 @@ namespace Write_Wash.ViewModels
 
             }
         }
+        private string _SelectedFiltreStatus { get; set; }
+        public string SelectedFiltreStatus
+        {
+            get { return _SelectedFiltreStatus; }
+            set
+            {
+                _SelectedFiltreStatus = value;
+                RaisePropertyChanged(nameof(SelectedFiltre));
+                UpdateProduct();
+
+            }
+        }
         public async void UpdateProduct()
         {
             var currentProduct = await _adminService.GetOrders();
@@ -161,7 +179,19 @@ namespace Write_Wash.ViewModels
                         break;
                 }
             }
-            
+            if (!string.IsNullOrEmpty(SelectedFiltreStatus))
+            {
+                switch (SelectedFiltreStatus)
+                {
+                    case "Новые":
+                        currentProduct = currentProduct.Where(p => p.OrderStatus == "Новый").ToList();
+                        break;
+                    case "Завершенные":
+                        currentProduct = currentProduct.Where(p => p.OrderStatus == "Завершен").ToList();
+                        break;
+                    
+                }
+            }
             if (!string.IsNullOrEmpty(SelectedSort))
             {
                 switch (SelectedSort)
