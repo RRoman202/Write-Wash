@@ -22,7 +22,11 @@ namespace Write_Wash.Data
         public DbSet<OrderProductContext> Orderproduct { get; set; }
 
         public DbSet<OrderContext> Order { get; set; }
-        
+
+        public DbSet<CategoryProductContext> Categoryproduct { get; set; }
+
+        public DbSet<DeliveryContext> Delivery { get; set; }
+
         public DataContext(DbContextOptions<DataContext> options)
             : base(options) { }
     }

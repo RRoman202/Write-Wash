@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using System.Windows.Media;
 using Write_Wash.Models;
 using Write_Wash.Services;
+using Write_Wash.Views;
 
 namespace Write_Wash.ViewModels
 {
@@ -52,6 +53,7 @@ namespace Write_Wash.ViewModels
                 CheckNullProduct();
                 OrderEllipseCheck();
                 if (OrderEllipse == Visibility.Visible) { OrderProductCount = Global.Cart.Count().ToString(); }
+                
             }).WaitAsync(TimeSpan.FromMilliseconds(10))
             .ConfigureAwait(false);
             Sorts = new ObservableCollection<string>
@@ -164,5 +166,12 @@ namespace Write_Wash.ViewModels
             _pageService.ChangePage(new SignView());
         });
         public DelegateCommand AdminOrder => new(() => { _pageService.ChangePage(new AdminBrowseOrder()); });
+        public DelegateCommand AddProductPage => new(() => { _pageService.ChangePage(new AddProduct()); });
+        public DelegateCommand ChangeProductPage => new(() =>
+        {
+            Global.product = Products[SelectedProduct];
+            _pageService.ChangePage(new ChangeProduct()); 
+        });
+        public DelegateCommand DeliveryPage => new(() => { _pageService.ChangePage(new Views.Delivery()); });
     }
 }

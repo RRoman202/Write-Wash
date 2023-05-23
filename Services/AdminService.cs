@@ -1,4 +1,5 @@
 ﻿using DevExpress.Internal.WinApi.Windows.UI.Notifications;
+using Microsoft.Win32;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -6,6 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Controls;
 using Write_Wash.Models;
+using Write_Wash.Models.DBContext;
 
 namespace Write_Wash.Services
 {
@@ -175,6 +177,68 @@ namespace Write_Wash.Services
                 _context.Entry<OrderContext>(newOrder).State = EntityState.Detached;
 
             }
+        }
+        public string FilePath { get; set; }
+
+        public string ImageSaveFileDialog()
+        {
+            OpenFileDialog saveFileDialog = new();
+            saveFileDialog.Filter = "Файлы изображений (*.bmp, *.jpg, *.png)|*.bmp;*.jpg;*.png";
+
+            var result = saveFileDialog.ShowDialog();
+            if (result == true)
+            {
+                string filepath = saveFileDialog.FileName;
+
+                string resourcesPath = System.IO.Path.GetFullPath("Resources/Image");
+
+                byte[] data = default(byte[]);
+
+                try
+                {
+
+                    using (FileStream fileStream = File.Create($"{resourcesPath}/{System.IO.Path.GetFileName(filepath)}"))
+                    {
+
+                    }
+
+                    using (var stream = File.Open(filepath, FileMode.Open))
+                    {
+                        var reader = new StreamReader(stream);
+                        using (var memstream = new MemoryStream())
+                        {
+                            reader.BaseStream.CopyTo(memstream);
+                            data = memstream.ToArray();
+                        }
+                    }
+
+
+
+                    File.WriteAllBytes($"{resourcesPath}/{System.IO.Path.GetFileName(filepath)}", data);
+
+                }
+                catch
+                {
+
+                }
+
+
+                FilePath = System.IO.Path.GetFileName(filepath);
+                return FilePath;
+            }
+            return FilePath;
+        }
+        public async Task<List<DeliveryContext>> GetDeliveries()
+        {
+            return await _context.Delivery.ToListAsync();
+            
+        }
+        public async void AddDelivery(DeliveryContext delivery)
+        {
+            delivery.idDelivery = await _context.Delivery.MaxAsync(d => d.idDelivery) + 1;
+            await _context.Delivery.AddAsync(delivery);
+            await _context.SaveChangesAsync();
+            _context.Entry<DeliveryContext>(delivery).State = EntityState.Detached;
         }
     }
 }

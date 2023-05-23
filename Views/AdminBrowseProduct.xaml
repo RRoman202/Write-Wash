@@ -116,9 +116,9 @@
             </Grid.ColumnDefinitions>
             <Button Grid.Column="0" Margin="10" FontFamily="{StaticResource pwsFont}" Command="{Binding AdminOrder}">Заказы</Button>
             <Button Grid.Column="1" Margin="10" FontFamily="{StaticResource pwsFont}">Производители</Button>
-            <Button Grid.Column="2" Margin="10" FontFamily="{StaticResource pwsFont}">Поставщики</Button>
+            <Button Grid.Column="2" Margin="10" FontFamily="{StaticResource pwsFont}" Command="{Binding DeliveryPage}">Поставщики</Button>
         </Grid>
-        <Button Grid.Row="2" Width="300">Добавить товар</Button>
+        <Button Grid.Row="2" Width="300" Command="{Binding AddProductPage}">Добавить товар</Button>
         <Border Grid.Row="3" 
                 Background="{StaticResource pwsAccentedBg}"
                 HorizontalAlignment="Center"
@@ -137,7 +137,7 @@
             <ListBox FontFamily="{StaticResource pwsFont}"
                       ItemsSource="{Binding Products}"
                      SelectedIndex="{Binding SelectedProduct}"
-                     
+                     x:Name="list"
                       HorizontalAlignment="Stretch"
                       HorizontalContentAlignment="Stretch"
                       ScrollViewer.HorizontalScrollBarVisibility="Disabled"
@@ -146,24 +146,16 @@
                      Focusable="False" 
                      
                      >
-                <ListBox.ContextMenu>
-                    <ContextMenu>
-                        <MenuItem Header="Добавить к заказу"
-                                              FontFamily="{StaticResource pwsFont}"
-                                              Foreground="{StaticResource pwsAccentedBg}"
-                                              Command="{Binding AddToOrder}"></MenuItem>
-                        <MenuItem Header="Удалить"
-                                              Visibility="{Binding menuitems}"
-                                              FontFamily="{StaticResource pwsFont}"
-                                              Foreground="{StaticResource pwsAccentedBg}"
-                                              Command="{Binding AddToOrder}"></MenuItem>
-                        <MenuItem Header="Редактировать"
-                                              Visibility="{Binding menuitems}"
-                                              FontFamily="{StaticResource pwsFont}"
-                                              Foreground="{StaticResource pwsAccentedBg}"
-                                              Command="{Binding AddToOrder}"></MenuItem>
-                    </ContextMenu>
-                </ListBox.ContextMenu>
+                
+                <ListBox.ItemContainerStyle>
+                    <Style TargetType="ListBoxItem">
+                        <Style.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter Property="IsSelected" Value="True"/>
+                            </Trigger>
+                        </Style.Triggers>
+                    </Style>
+                </ListBox.ItemContainerStyle>
                 <ListBox.ItemsPanel>
                     <ItemsPanelTemplate>
                         <VirtualizingStackPanel IsItemsHost="True" Orientation="Vertical" HorizontalAlignment="Stretch" ></VirtualizingStackPanel>
@@ -214,9 +206,13 @@
                                         <RowDefinition Height="auto"></RowDefinition>
                                         <RowDefinition Height="auto"></RowDefinition>
                                     </Grid.RowDefinitions>
-                                    <TextBlock Grid.Row="0"
+                                    <WrapPanel Grid.Row="0">
+                                        <TextBlock Grid.Row="0"
                                                FontWeight="Bold"
                                                Text="{Binding ProductName}"></TextBlock>
+                                        <TextBlock Text="  Артикул: "></TextBlock>
+                                        <TextBlock Text="{Binding ProductArticleNumber}"></TextBlock>
+                                    </WrapPanel>
                                     <TextBlock Grid.Row="1"
                                                Text="{Binding ProductDescription}"></TextBlock>
                                     <TextBlock Grid.Row="2"
@@ -229,18 +225,30 @@
                                     </WrapPanel>
 
                                 </Grid>
-
-                                <WrapPanel Grid.Column="2" 
+                                <Grid Grid.Column="2">
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition></RowDefinition>
+                                        <RowDefinition></RowDefinition>
+                                        <RowDefinition></RowDefinition>
+                                    </Grid.RowDefinitions>
+                                    <WrapPanel Grid.Row="0" 
                                            VerticalAlignment="Center"
                                            HorizontalAlignment="Stretch"
                                            Margin="20 0 0 0">
-                                    <TextBlock Text="Скидка "></TextBlock>
-                                    <TextBlock 
+                                        <TextBlock Text="Скидка "></TextBlock>
+                                        <TextBlock 
                                            Text="{Binding CurrentDiscount}"
 
                                            ></TextBlock>
-                                    <TextBlock Text="%"></TextBlock>
-                                </WrapPanel>
+                                        <TextBlock Text="%"></TextBlock>
+                                    </WrapPanel>
+                                    <WrapPanel Grid.Row="1">
+                                        <TextBlock Text="Осталось на складе: "></TextBlock>
+                                        <TextBlock Text="{Binding ProductQuantityInStock}"></TextBlock>
+                                    </WrapPanel>
+                                    <Button Grid.Row="2" Content="Редактировать" Command="{Binding ElementName=list, Path=DataContext.ChangeProductPage}" CommandParameter="{Binding}"></Button>
+                                </Grid>
+                                
 
                             </Grid>
 

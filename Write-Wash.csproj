@@ -13,6 +13,7 @@
     <None Remove="Resources\icon.ico" />
     <None Remove="Resources\Image\icon.ico" />
     <None Remove="Resources\Image\logo.png" />
+    <None Remove="Resources\Image\null.png" />
   </ItemGroup>
 
   <ItemGroup>
@@ -52,6 +53,9 @@
     </Resource>
     <Resource Include="Resources\Image\icon.ico" />
     <Resource Include="Resources\Image\logo.png" />
+    <Resource Include="Resources\Image\null.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Resource>
   </ItemGroup>
 
   <ItemGroup>

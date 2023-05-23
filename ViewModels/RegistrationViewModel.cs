@@ -34,18 +34,32 @@ namespace Write_Wash.ViewModels
         });
         public DelegateCommand Reg => new(() =>
         {
-            _context.User.Add(new UserContext
+            try
             {
-                UserName = name,
-                UserSurName = surname,
-                UserPatronymic = patronymic,
-                UserLogin = login,
-                UserPassword = password,
-                UserRole = 2,
-                UserId = _context.User.Count() + 1
-            });
-            _context.SaveChanges();
-            _pageService.ChangePage(new SignView());
+                if(password == password2)
+                {
+                    _context.User.Add(new UserContext
+                    {
+                        UserName = name,
+                        UserSurName = surname,
+                        UserPatronymic = patronymic,
+                        UserLogin = login,
+                        UserPassword = password,
+                        UserRole = 2,
+                        UserId = _context.User.Count() + 1
+                    });
+                    _context.SaveChanges();
+                    _pageService.ChangePage(new SignView());
+                }
+                else
+                {
+                    MessageBox.Show("Пароли не совпадают");
+                }
+            }
+            catch
+            {
+                MessageBox.Show("Неправильные данные");
+            }
         });
     }
 }

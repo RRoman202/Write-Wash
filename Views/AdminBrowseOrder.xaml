@@ -147,10 +147,7 @@
                                               FontFamily="{StaticResource pwsFont}"
                                               Foreground="{StaticResource pwsAccentedBg}"
                                               Command="{Binding ChangeOrder}"></MenuItem>
-                        <MenuItem Header="Состав заказа"
-                                              FontFamily="{StaticResource pwsFont}"
-                                              Foreground="{StaticResource pwsAccentedBg}"
-                                              Command="{Binding FullOrder}"></MenuItem>
+                        
 
                     </ContextMenu>
                 </ListBox.ContextMenu>
@@ -302,15 +299,7 @@
                      Focusable="False" 
                      
                      >
-                    <ListBox.ContextMenu>
-                        <ContextMenu>
-                            <MenuItem Header="Добавить к заказу"
-                                              FontFamily="{StaticResource pwsFont}"
-                                              Foreground="{StaticResource pwsAccentedBg}"
-                                              Command="{Binding AddToOrder}"></MenuItem>
-
-                        </ContextMenu>
-                    </ListBox.ContextMenu>
+                   
                     <ListBox.ItemsPanel>
                         <ItemsPanelTemplate>
                             <VirtualizingStackPanel IsItemsHost="True" Orientation="Vertical" HorizontalAlignment="Stretch" ></VirtualizingStackPanel>

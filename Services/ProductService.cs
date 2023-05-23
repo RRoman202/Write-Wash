@@ -39,6 +39,11 @@ namespace Write_Wash.Services
                             ProductCost = item.ProductCost,
                             CurrentDiscount = item.CurrentDiscount,
                             ProductArticleNumber = item.ProductArticleNumber,
+                            ProductQuantityInStock = item.ProductQuantityInStock,
+                            ProductUnit = item.ProductUnit,
+                            ProductDelivery = item.ProductDelivery,
+                            ProductManufacturer = item.ProductManufacturer,
+                            ProductCategory= item.ProductCategory,
                             ProductCount = 0
                             
                         }); 
@@ -64,6 +69,76 @@ namespace Write_Wash.Services
             }
             return dbProducts;
         }
+        public async Task<List<CategoryProductContext>> GetProductCategoriesAsync()
+        {
+            return await _context.Categoryproduct.ToListAsync();
+        }
 
+        public async Task<List<ManufacturesContext>> GetManufacturersAsync()
+        {
+            return await _context.Manufactures.ToListAsync();
+        }
+
+
+        public async Task<List<DeliveryContext>> GetDeliveriesAsync()
+        {
+            return await _context.Delivery.ToListAsync();
+        }
+        public async Task<string> GenerateArticle()
+        {
+            string article = "";
+            List<ProductContext> articles = await _context.Product.ToListAsync();
+
+            await Task.Run(() =>
+            {
+                string[] symbolsArray = { "1", "2", "3", "4", "5", "6", "7", "8", "9", "B", "C", "D", "F", "G", "H", "J", "K", "L", "M", "N", "P", "Q", "R", "S", "T", "V", "W", "X", "Z" };
+
+                bool isArticle = false;
+
+                while (isArticle == false)
+                {
+                    Random rnd = new();
+                    for (int i = 0; i < 5; i = i + 1)
+                    {
+                        article = article + symbolsArray[rnd.Next(0, symbolsArray.Length)];
+                    }
+
+                    if (articles.All(a => a.ProductArticleNumber != article))
+                    {
+                        isArticle = true;
+                    }
+                }
+
+            });
+
+            return article;
+        }
+        public async void AddNewProduct(ProductContext product)
+        {
+            
+            await _context.Product.AddAsync(product);
+            await _context.SaveChangesAsync();
+        }
+        public async void ChangeProduct(ProductContext productDB)
+        {
+            ProductContext? product = await _context.Product.Where(p => p.ProductArticleNumber == productDB.ProductArticleNumber).SingleOrDefaultAsync();
+
+            if (product != null)
+            {
+                product.ProductManufacturer = productDB.ProductManufacturer;
+                product.ProductPhoto = productDB.ProductPhoto;
+                product.CurrentDiscount = productDB.CurrentDiscount;
+                product.ProductDelivery = productDB.ProductDelivery;
+                product.ProductCategory = productDB.ProductCategory;
+                product.ProductDescription = productDB.ProductDescription;
+                product.ProductName = productDB.ProductName;
+                product.ProductUnit = productDB.ProductUnit;
+                product.ProductCost = productDB.ProductCost;
+                product.ProductQuantityInStock = productDB.ProductQuantityInStock;
+                _context.Product.Update(product);
+                _context.SaveChanges();
+                _context.Entry<ProductContext>(product).State = EntityState.Detached;
+            }
+        }
     }
 }

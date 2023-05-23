@@ -21,6 +21,7 @@ namespace Write_Wash
         public static List<OrderProduct> Cart { get; set; } = new List<OrderProduct>();
         public static Order order { get; set; } = new Order();
         public static Points point { get; set; } = new Points();
+        public static Product product { get; set; } = new Product();
         
     }
 }
