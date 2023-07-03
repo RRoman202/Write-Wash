@@ -27,6 +27,7 @@ namespace Write_Wash
             services.AddTransient<AddDeliveryViewModel>();
             services.AddTransient<AddManufactureViewModel>();
             services.AddTransient<DeliveryViewModel>();
+            services.AddTransient<ManufacturePageViewModel>();
 
             #endregion
 
@@ -89,5 +90,6 @@ namespace Write_Wash
         public AddManufactureViewModel AddManufactureViewModel => _provider.GetRequiredService<AddManufactureViewModel>();
         public AddDeliveryViewModel AddDeliveryViewModel => _provider.GetRequiredService<AddDeliveryViewModel>();
         public DeliveryViewModel DeliveryViewModel => _provider.GetRequiredService<DeliveryViewModel>();
+        public ManufacturePageViewModel ManufacturePageViewModel => _provider.GetRequiredService<ManufacturePageViewModel>();
     }
 }

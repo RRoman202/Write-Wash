@@ -173,5 +173,6 @@ namespace Write_Wash.ViewModels
             _pageService.ChangePage(new ChangeProduct()); 
         });
         public DelegateCommand DeliveryPage => new(() => { _pageService.ChangePage(new Views.Delivery()); });
+        public DelegateCommand ManufacturePage => new(() => { _pageService.ChangePage(new ManufacturePage()); });
     }
 }

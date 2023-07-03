@@ -114,8 +114,8 @@
                 <ColumnDefinition></ColumnDefinition>
             </Grid.ColumnDefinitions>
             <Button Grid.Column="0" Margin="10" FontFamily="{StaticResource pwsFont}">Заказы</Button>
-            <Button Grid.Column="1" Margin="10" FontFamily="{StaticResource pwsFont}">Производители</Button>
-            <Button Grid.Column="2" Margin="10" FontFamily="{StaticResource pwsFont}">Поставщики</Button>
+            <Button Grid.Column="1" Margin="10" FontFamily="{StaticResource pwsFont}" Command="{Binding ManufacturePage}">Производители</Button>
+            <Button Grid.Column="2" Margin="10" FontFamily="{StaticResource pwsFont}" Command="{Binding DeliveryPage}">Поставщики</Button>
             <Button Grid.Column="3" Margin="10" FontFamily="{StaticResource pwsFont}" Command="{Binding GoProduct}">Товары</Button>
         </Grid>
         
@@ -170,7 +170,7 @@
 
                 <ListBox.ItemTemplate>
                     <DataTemplate>
-                        <materialDesign:Card Background="#20b2aa"
+                        <materialDesign:Card Background="{Binding productQuantities, Converter={StaticResource OrderBrushConverter}}"
                                              Padding="8"
                                              HorizontalContentAlignment="Stretch"
                                              HorizontalAlignment="Stretch"
@@ -277,14 +277,36 @@
                     <Grid.RowDefinitions>
                         <RowDefinition></RowDefinition>
                         <RowDefinition></RowDefinition>
+                        <RowDefinition></RowDefinition>
                     </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition></ColumnDefinition>
+                        <ColumnDefinition></ColumnDefinition>
+                        <ColumnDefinition></ColumnDefinition>
+                    </Grid.ColumnDefinitions>
                     <WrapPanel Grid.Row="0">
-                        <TextBlock Text="Номер заказа: " FontFamily="{StaticResource pwsFont}" FontSize="20"></TextBlock>
-                        <TextBlock Text="{Binding NumberOrder}" FontFamily="{StaticResource pwsFont}" FontSize="20"></TextBlock>
+                        <TextBlock Text="Номер заказа: " FontFamily="{StaticResource pwsFont}" FontSize="15"></TextBlock>
+                        <TextBlock Text="{Binding NumberOrder}" FontFamily="{StaticResource pwsFont}" FontSize="15"></TextBlock>
                     </WrapPanel>
                     <WrapPanel Grid.Row="1">
-                        <TextBlock Text="Код получения: " FontFamily="{StaticResource pwsFont}" FontSize="20"></TextBlock>
-                        <TextBlock Text="{Binding CodeOrder}" FontFamily="{StaticResource pwsFont}" FontSize="20"></TextBlock>
+                        <TextBlock Text="Код получения: " FontFamily="{StaticResource pwsFont}" FontSize="15"></TextBlock>
+                        <TextBlock Text="{Binding CodeOrder}" FontFamily="{StaticResource pwsFont}" FontSize="15"></TextBlock>
+                    </WrapPanel>
+                    <WrapPanel Grid.Row="0" Grid.Column="1" Grid.ColumnSpan="2">
+                        <TextBlock Text="Пункт выдачи: " FontFamily="{StaticResource pwsFont}" FontSize="15"></TextBlock>
+                        <TextBlock Text="{Binding Pointt}" FontFamily="{StaticResource pwsFont}" FontSize="10" VerticalAlignment="Center"></TextBlock>
+                    </WrapPanel>
+                    <WrapPanel Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="2">
+                        <TextBlock Text="Количество разных товаров: " FontFamily="{StaticResource pwsFont}" FontSize="15"></TextBlock>
+                        <TextBlock Text="{Binding CountProd}" FontFamily="{StaticResource pwsFont}" FontSize="10" VerticalAlignment="Center"></TextBlock>
+                    </WrapPanel>
+                    <WrapPanel Grid.Row="2" Grid.Column="0">
+                        <TextBlock Text="Статус заказа: " FontFamily="{StaticResource pwsFont}" FontSize="15"></TextBlock>
+                        <TextBlock Text="{Binding Stat}" FontFamily="{StaticResource pwsFont}" FontSize="10" VerticalAlignment="Center"></TextBlock>
+                    </WrapPanel>
+                    <WrapPanel Grid.Row="2" Grid.Column="1" Grid.ColumnSpan="2">
+                        <TextBlock Text="Общее количество товаров: " FontFamily="{StaticResource pwsFont}" FontSize="15"></TextBlock>
+                        <TextBlock Text="{Binding CountProdFull}" FontFamily="{StaticResource pwsFont}" FontSize="10" VerticalAlignment="Center"></TextBlock>
                     </WrapPanel>
                 </Grid>
                 <ListBox FontFamily="{StaticResource pwsFont}"

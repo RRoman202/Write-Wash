@@ -42,10 +42,7 @@
                 <MenuItem FontFamily="{StaticResource pwsFont}">
                     <MenuItem.Header>
                         <WrapPanel>
-                            <Grid VerticalAlignment="Top">
-                                <Ellipse Width="15" Height="15" Fill="red" Visibility="{Binding OrderEllipse}"></Ellipse>
-                                <TextBlock VerticalAlignment="Top" Text="{Binding OrderProductCount}" FontSize="14" Foreground="White" HorizontalAlignment="Center"></TextBlock>
-                            </Grid>
+                            
                             <Image Source="\Resources\Image\logo.png"></Image>
                         </WrapPanel>
                     </MenuItem.Header>

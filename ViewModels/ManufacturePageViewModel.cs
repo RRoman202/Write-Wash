@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Write_Wash.ViewModels
 {
-    class AddManufactureViewModel
+    class ManufacturePageViewModel
     {
         public event PropertyChangedEventHandler PropertyChanged;
         private readonly PageService _pageService;
@@ -24,47 +24,46 @@ namespace Write_Wash.ViewModels
         public int CodeOrder { get; set; }
         public float? FullPriceOrder { get; set; }
         public string OrderProductCount { get; set; }
-
+        public int MaxProd { get; set; }
+        public int CurrentProd { get; set; }
         public int FullOrderColumn { get; set; } = 1;
         public int FullOrderSpan { get; set; } = 1;
-        public Order ChangedOrder { get; set; }
-        public List<string> statuses { get; set; } = new List<string>();
-        public string SelectedStatus { get; set; }
+        public ObservableCollection<string> Sorts { get; set; }
+        public ObservableCollection<string> Filtre { get; set; }
+        public ObservableCollection<string> FiltreStatus { get; set; }
 
         public string FullName { get; set; } = Global.CurrentUser.Name == string.Empty ? "Гость" : $"{Global.CurrentUser.Surname} {Global.CurrentUser.Name} {Global.CurrentUser.Patronymic}";
-        public DateTime selectedEndDate { get; set; }
-
+        public List<ManufacturesContext> Deliveries { get; set; }
+        public int SelectedDelivery { get; set; }
         public string NameDelivery { get; set; }
-
-
-        public AddManufactureViewModel(PageService pageService, AdminService adminService, DataContext context)
+        public ManufacturePageViewModel(PageService pageService, AdminService adminService, DataContext context)
         {
             _context = context;
             _pageService = pageService;
 
             _adminService = adminService;
 
-        }
-        public DelegateCommand GoProduct => new(() =>
-        {
-            _pageService.ChangePage(new AdminBrowseProduct());
-        });
-        public DelegateCommand GoOrders => new(() =>
-        {
-            _pageService.ChangePage(new AdminBrowseOrder());
-        });
+            Task.Run(async () =>
+            {
+                Deliveries = await _adminService.GetManufactures();
 
-        public DelegateCommand AddNewDelivery => new(async () =>
+            }).WaitAsync(TimeSpan.FromMilliseconds(50))
+            .ConfigureAwait(false);
+
+
+
+        }
+        public DelegateCommand AddManufacturePage => new(() =>
         {
-            ManufacturesContext delivery = new();
-            delivery.NameManufactures = NameDelivery;
-            _adminService.AddManufacture(delivery);
-            await Task.Delay(100);
-            _pageService.ChangePage(new ManufacturePage());
+            _pageService.ChangePage(new AddManufacture());
         });
         public DelegateCommand GoBack => new(() =>
         {
-            _pageService.ChangePage(new ManufacturePage());
+            _pageService.ChangePage(new AdminBrowseProduct());
+        });
+        public DelegateCommand ChangeButton => new(() =>
+        {
+
         });
     }
 }

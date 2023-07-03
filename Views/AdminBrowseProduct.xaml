@@ -76,10 +76,7 @@
                 <MenuItem FontFamily="{StaticResource pwsFont}">
                     <MenuItem.Header>
                         <WrapPanel>
-                            <Grid VerticalAlignment="Top">
-                                <Ellipse Width="15" Height="15" Fill="red" Visibility="{Binding OrderEllipse}"></Ellipse>
-                                <TextBlock VerticalAlignment="Top" Text="{Binding OrderProductCount}" FontSize="14" Foreground="White" HorizontalAlignment="Center"></TextBlock>
-                            </Grid>
+                            
                             <Image Source="\Resources\Image\logo.png"></Image>
                         </WrapPanel>
                     </MenuItem.Header>
@@ -115,7 +112,7 @@
                 
             </Grid.ColumnDefinitions>
             <Button Grid.Column="0" Margin="10" FontFamily="{StaticResource pwsFont}" Command="{Binding AdminOrder}">Заказы</Button>
-            <Button Grid.Column="1" Margin="10" FontFamily="{StaticResource pwsFont}">Производители</Button>
+            <Button Grid.Column="1" Margin="10" FontFamily="{StaticResource pwsFont}" Command="{Binding ManufacturePage}">Производители</Button>
             <Button Grid.Column="2" Margin="10" FontFamily="{StaticResource pwsFont}" Command="{Binding DeliveryPage}">Поставщики</Button>
         </Grid>
         <Button Grid.Row="2" Width="300" Command="{Binding AddProductPage}">Добавить товар</Button>

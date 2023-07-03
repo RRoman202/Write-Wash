@@ -22,9 +22,22 @@ namespace Write_Wash.Models
         public float? discountPrice { get; set; }
 
         
-        public List<int> productQuantities;
+        
 
         
         public List<Product> products;
+        public List<int> productQuantities
+        {
+            get
+            {
+                List<int> quan = new List<int>();
+                foreach(var item in products)
+                {
+                    quan.Add(item.ProductQuantityInStock);
+                }
+                return quan;
+
+            }
+        }
     }
 }

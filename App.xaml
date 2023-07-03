@@ -13,6 +13,7 @@
             </ResourceDictionary.MergedDictionaries>
             <local:ViewModelLocator x:Key="ViewModelLocator"/>
             <converterts:StringToBrushConverter x:Key="StringToBrushConverter"/>
+            <converterts:OrderBrushConverter x:Key="OrderBrushConverter"></converterts:OrderBrushConverter>
             <converterts:ValueToTextDecorationsConverter x:Key="ValueToTextDecorationsConverter"/>
             <Color x:Key="pwsPrimaryColor">#ffffff</Color>
             <Color x:Key="pwsSecondaryColor">#76e383</Color>

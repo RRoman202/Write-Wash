@@ -23,5 +23,6 @@ namespace Write_Wash
         public static Points point { get; set; } = new Points();
         public static Product product { get; set; } = new Product();
         
+        
     }
 }

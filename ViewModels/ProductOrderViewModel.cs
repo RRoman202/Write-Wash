@@ -7,6 +7,7 @@ using Write_Wash.Models;
 using iTextSharp.text;
 using iTextSharp.text.pdf;
 using System.IO;
+using DevExpress.Internal.WinApi.Windows.UI.Notifications;
 
 namespace Write_Wash.ViewModels
 {
@@ -37,6 +38,8 @@ namespace Write_Wash.ViewModels
 
         public List<Product> allp { get; set; }
 
+        public float? FullPrice { get; set; }
+
         public ProductOrderViewModel(PageService pageService, ProductService productService, PointService pointService, OrderService orderService)
         {
             _pageService = pageService;
@@ -52,8 +55,10 @@ namespace Write_Wash.ViewModels
                 MaxProd = Products.Count();
                 CurrentProd = Products.Count();
                 SumOrder = CheckSumOrder().ToString();
+                
                 DiscountOrder = DiscountOrderCheck().ToString();
                 CheckNullProduct();
+                FullPrice= CheckFullPrice();
 
             }).WaitAsync(TimeSpan.FromMilliseconds(10))
             .ConfigureAwait(false);
@@ -104,6 +109,22 @@ namespace Write_Wash.ViewModels
             }
             return sumorder;
         }
+        float? CheckFullPrice()
+        {
+            float? sumfullprice = 0;
+            foreach (Product p in Products)
+            {
+                foreach (OrderProduct o in Global.Cart)
+                {
+                    if (o.ProductArticleNumber == p.ProductArticleNumber)
+                    {
+                        sumfullprice += p.FullPrice;
+                    }
+                }
+
+            }
+            return sumfullprice;
+        }
         float? DiscountOrderCheck()
         {
             float? disc;
@@ -137,28 +158,33 @@ namespace Write_Wash.ViewModels
         });
         public DelegateCommand DeleteInOrder => new DelegateCommand(() =>
         {
-            if(Products.Count() > 0)
+            try
             {
-                
-                Global.Cart.RemoveAt(SelectedProduct);
-                Task.Run(async () =>
+                if (Products.Count() > 0)
                 {
-                    Products = await _productService.GetCart();
-                    MaxProd = Products.Count();
-                    CurrentProd = Products.Count();
-                    SumOrder = CheckSumOrder().ToString();
-                    DiscountOrder = DiscountOrderCheck().ToString();
-                    CheckNullProduct();
-                    
 
-                }).WaitAsync(TimeSpan.FromMilliseconds(10))
-                .ConfigureAwait(false);
-                if (Global.Cart.Count > 0)
-                    DiscountOrder = DiscountOrderCheck().ToString();
-                else
-                    DiscountOrder = null;
+                    Global.Cart.RemoveAt(SelectedProduct);
+                    Task.Run(async () =>
+                    {
+                        Products = await _productService.GetCart();
+                        MaxProd = Products.Count();
+                        CurrentProd = Products.Count();
+                        SumOrder = CheckSumOrder().ToString();
+                        DiscountOrder = DiscountOrderCheck().ToString();
+                        CheckNullProduct();
+                        FullPrice = CheckFullPrice();
 
+
+                    }).WaitAsync(TimeSpan.FromMilliseconds(10))
+                    .ConfigureAwait(false);
+                    if (Global.Cart.Count > 0)
+                        DiscountOrder = DiscountOrderCheck().ToString();
+                    else
+                        DiscountOrder = null;
+
+                }
             }
+            catch { }
             
         });
         public DelegateCommand RemoveProductInOrder => new DelegateCommand(() =>
@@ -176,6 +202,7 @@ namespace Write_Wash.ViewModels
                         SumOrder = CheckSumOrder().ToString();
                         DiscountOrder = DiscountOrderCheck().ToString();
                         CheckNullProduct();
+                        FullPrice = CheckFullPrice();
 
 
                     }).WaitAsync(TimeSpan.FromMilliseconds(10))
@@ -192,6 +219,7 @@ namespace Write_Wash.ViewModels
                         SumOrder = CheckSumOrder().ToString();
                         DiscountOrder = DiscountOrderCheck().ToString();
                         CheckNullProduct();
+                        FullPrice = CheckFullPrice();
 
 
                     }).WaitAsync(TimeSpan.FromMilliseconds(10))
@@ -205,28 +233,60 @@ namespace Write_Wash.ViewModels
         {
             try
             {
-                Global.Cart[SelectedProduct].ProductCount++;
-                Task.Run(async () =>
+                foreach(var p in Products)
                 {
-                    Products = await _productService.GetCart();
-                    MaxProd = Products.Count();
-                    CurrentProd = Products.Count();
-                    SumOrder = CheckSumOrder().ToString();
-                    DiscountOrder = DiscountOrderCheck().ToString();
-                    CheckNullProduct();
+                    if(Global.Cart[SelectedProduct].ProductArticleNumber == p.ProductArticleNumber)
+                    {
+                        if((p.ProductQuantityInStock - Global.Cart[SelectedProduct].ProductCount) > 0)
+                        {
+                            Global.Cart[SelectedProduct].ProductCount++;
+                            Task.Run(async () =>
+                            {
+                                Products = await _productService.GetCart();
+                                MaxProd = Products.Count();
+                                CurrentProd = Products.Count();
+                                SumOrder = CheckSumOrder().ToString();
+                                DiscountOrder = DiscountOrderCheck().ToString();
+                                CheckNullProduct();
+                                FullPrice = CheckFullPrice();
 
 
-                }).WaitAsync(TimeSpan.FromMilliseconds(10))
-                .ConfigureAwait(false);
+                            }).WaitAsync(TimeSpan.FromMilliseconds(10))
+                            .ConfigureAwait(false);
+                        }
+                        else
+                        {
+                            MessageBox.Show("Товара на складе не осталось");
+                        }
+                    }
+                }
+                
             }
             catch { }
 
 
         });
-        public DelegateCommand OrderBut => new DelegateCommand(() =>
+        public int Code { get; set; }
+        public DelegateCommand OrderBut => new DelegateCommand(async () =>
         {
+            if(Code == 0)
+            {
+                string code = "";
+                for (int i = 0; i < 3; i++)
+                {
+                    Random rnd = new Random();
+                    int r = rnd.Next(9);
+                    code += r.ToString();
+                }
+
+                Code = int.Parse(code);
+            }
+            
             Global.point = SelectedPoint;
-            _orderService.NewOrder();
+            _orderService.NewOrder(Code);
+            await Task.Delay(100);
+            Global.Cart.Clear();
+            _pageService.ChangePage(new BrowseProduct());
         });
         public DelegateCommand Pdf => new DelegateCommand(() =>
         {
@@ -234,6 +294,16 @@ namespace Write_Wash.ViewModels
         });
         private void CreatePDF()
         {
+            Global.point = SelectedPoint;
+            string code = "";
+            for (int i = 0; i < 3; i++)
+            {
+                Random rnd = new Random();
+                int r = rnd.Next(9);
+                code += r.ToString();
+            }
+
+            Code = int.Parse(code);
             // Создаем документ и задаем размер страницы
             Document document = new Document(PageSize.A4, 50, 50, 25, 25);
             
@@ -259,6 +329,8 @@ namespace Write_Wash.ViewModels
             document.Add(paragraph);
             Paragraph paragraph2 = new Paragraph(DateTime.Now.ToString());
             document.Add(paragraph2);
+            Paragraph punct = new Paragraph($"Пункт выдачи: {Global.point.PointIndex} {Global.point.PointCity} {Global.point.PointStreet} {Global.point.PointHome}", font);
+            document.Add(punct);
             foreach (Product p in Products)
             {
                 if (p.CurrentDiscount == 0)
@@ -278,14 +350,8 @@ namespace Write_Wash.ViewModels
             document.Add(p1);
             Paragraph p2 = new Paragraph("Общая скидка: " + DiscountOrder + "%", font);
             document.Add(p2);
-            string code = "";
-            for (int i = 0; i < 3; i++)
-            {
-                Random rnd = new Random();
-                int r = rnd.Next(9);
-                code += r.ToString();
-            }
-            Paragraph p3 = new Paragraph("Код получения: " + code, font);
+            
+            Paragraph p3 = new Paragraph("Код получения: " + Code.ToString(), font);
             document.Add(p3);
             // Закрываем документ
             document.Close();

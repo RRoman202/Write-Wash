@@ -15,11 +15,11 @@ namespace Write_Wash.Services
         {
             _context = context;
         }
-        public async void NewOrder()
+        public async void NewOrder(int code)
         {
             
             int orderNumber = _context.Order.Max(o => o.OrderID) + 1;
-            int receiptСode = _context.Order.Max(o => o.OrderCode) + 1;
+            
 
             await _context.Order.AddAsync(new OrderContext
             {
@@ -29,7 +29,7 @@ namespace Write_Wash.Services
                 OrderDate2 = DateTime.Now.AddDays(6),
                 OrderPickupPoint = Global.point.PointId,
                 FIO = Global.CurrentUser != null ? $"{Global.CurrentUser.Surname} {Global.CurrentUser.Name} {Global.CurrentUser.Patronymic}" : null,
-                OrderCode = receiptСode
+                OrderCode = code
             });
 
 

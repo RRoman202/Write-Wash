@@ -1,19 +1,19 @@
-﻿<Page x:Class="Write_Wash.Views.Delivery"
+﻿<Page x:Class="Write_Wash.Views.ManufacturePage"
       xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
       xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
-      DataContext="{Binding DeliveryViewModel, Source={StaticResource ViewModelLocator}}"
+      DataContext="{Binding ManufacturePageViewModel, Source={StaticResource ViewModelLocator}}"
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
       xmlns:local="clr-namespace:Write_Wash.Views"
       mc:Ignorable="d" 
       d:DesignHeight="450" d:DesignWidth="800"
-      Title="Delivery" Background="White">
+      Title="ManufacturePage" Background="White">
 
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="auto"></RowDefinition>
-            
+
             <RowDefinition Height="*"></RowDefinition>
         </Grid.RowDefinitions>
 
@@ -25,8 +25,8 @@
                 <ColumnDefinition Width="*"></ColumnDefinition>
                 <ColumnDefinition Width="*"></ColumnDefinition>
             </Grid.ColumnDefinitions>
-            <TextBlock VerticalAlignment="Center" FontSize="20" FontFamily="{StaticResource pwsFont}">Поставщики</TextBlock>
-            <Button Grid.Column="1" Command="{Binding AddDeliveryPage}">Добавить поставщика</Button>
+            <TextBlock VerticalAlignment="Center" FontSize="20" FontFamily="{StaticResource pwsFont}">Производители</TextBlock>
+            <Button Grid.Column="1" Command="{Binding AddManufacturePage}">Добавить производителя</Button>
             <Button Grid.Column="2" Command="{Binding GoBack}" Margin="20 0 0 0">Назад</Button>
 
 
@@ -67,7 +67,7 @@
                 </Menu.Resources>
             </Menu>
         </Grid>
-        
+
         <Grid Grid.Row="1">
             <ListBox FontFamily="{StaticResource pwsFont}"
                       ItemsSource="{Binding Deliveries}"
@@ -118,7 +118,7 @@
                                   VerticalAlignment="Center">
 
 
-                                <TextBlock Text="{Binding NameDelivery}"></TextBlock>
+                                <TextBlock Text="{Binding NameManufactures}"></TextBlock>
 
                             </Grid>
 

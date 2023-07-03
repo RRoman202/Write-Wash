@@ -34,8 +34,8 @@ namespace Write_Wash.ViewModels
 
         public string FullName { get; set; } = Global.CurrentUser.Name == string.Empty ? "Гость" : $"{Global.CurrentUser.Surname} {Global.CurrentUser.Name} {Global.CurrentUser.Patronymic}";
         public List<DeliveryContext> Deliveries { get; set; }
-
-
+        public int SelectedDelivery { get; set; }
+        public string NameDelivery { get; set; }
         public DeliveryViewModel(PageService pageService, AdminService adminService, DataContext context)
         {
             _context = context;
@@ -47,7 +47,7 @@ namespace Write_Wash.ViewModels
             {
                 Deliveries = await _adminService.GetDeliveries();
 
-            }).WaitAsync(TimeSpan.FromMilliseconds(10))
+            }).WaitAsync(TimeSpan.FromMilliseconds(50))
             .ConfigureAwait(false);
             
 
@@ -60,6 +60,10 @@ namespace Write_Wash.ViewModels
         public DelegateCommand GoBack => new(() =>
         {
             _pageService.ChangePage(new AdminBrowseProduct());
+        });
+        public DelegateCommand ChangeButton => new(() =>
+        {
+            
         });
     }
 }

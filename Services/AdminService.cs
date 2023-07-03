@@ -47,7 +47,8 @@ namespace Write_Wash.Services
                             products = pp,
                             fullPrice = GetFullPrice(pp),
                             discount = GetDiscount(pp),
-                            discountPrice = GetDiscountPrice(pp)
+                            discountPrice = GetDiscountPrice(pp),
+                            OrderPickupPoint = item.OrderPickupPoint
                         }); ;
                         
                     }
@@ -233,12 +234,24 @@ namespace Write_Wash.Services
             return await _context.Delivery.ToListAsync();
             
         }
+        public async Task<List<ManufacturesContext>> GetManufactures()
+        {
+            return await _context.Manufactures.ToListAsync();
+
+        }
         public async void AddDelivery(DeliveryContext delivery)
         {
             delivery.idDelivery = await _context.Delivery.MaxAsync(d => d.idDelivery) + 1;
             await _context.Delivery.AddAsync(delivery);
             await _context.SaveChangesAsync();
             _context.Entry<DeliveryContext>(delivery).State = EntityState.Detached;
+        }
+        public async void AddManufacture(ManufacturesContext manufacture)
+        {
+            manufacture.idManufactures = await _context.Manufactures.MaxAsync(m => m.idManufactures) + 1;
+            await _context.Manufactures.AddAsync(manufacture);
+            await _context.SaveChangesAsync();
+            _context.Entry<ManufacturesContext>(manufacture).State = EntityState.Detached;
         }
     }
 }

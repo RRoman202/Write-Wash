@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
+using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Media;
@@ -35,10 +36,14 @@ namespace Write_Wash.ViewModels
         public ObservableCollection<string> Sorts { get; set; }
         public ObservableCollection<string> Filtre { get; set; }
         public ObservableCollection<string> FiltreStatus { get; set; }
+        public string Pointt { get; set; }
 
         public string FullName { get; set; } = Global.CurrentUser.Name == string.Empty ? "Гость" : $"{Global.CurrentUser.Surname} {Global.CurrentUser.Name} {Global.CurrentUser.Patronymic}";
 
-        
+        public int CountProd { get; set; }
+
+        public string Stat { get; set; }
+        public int CountProdFull { get; set; }
 
         public AdminBrowseOrderViewModel(PageService pageService, AdminService adminService, DataContext context)
         {
@@ -95,7 +100,14 @@ namespace Write_Wash.ViewModels
             Fullorder = Orders[SelectedProduct].products;
             NumberOrder = Orders[SelectedProduct].OrderID;
             CodeOrder = Orders[SelectedProduct].OrderCode;
+            Pointt = Orders[SelectedProduct].point;
+            CountProd = Orders[SelectedProduct].productQuantities.Count();
             FullPriceOrder = Orders[SelectedProduct].discountPrice;
+            Stat = Orders[SelectedProduct].OrderStatus;
+            foreach(var item in Orders[SelectedProduct].products)
+            {
+                CountProdFull += item.ProductCount;
+            }
             VisibleFullOrder = Visibility.Visible;
             ListOrderSpan = 1;
             
@@ -209,5 +221,13 @@ namespace Write_Wash.ViewModels
             
 
         }
+        public DelegateCommand DeliveryPage => new(() =>
+        {
+            _pageService.ChangePage(new Views.Delivery());
+        });
+        public DelegateCommand ManufacturePage => new(() =>
+        {
+            _pageService.ChangePage(new ManufacturePage());
+        });
     }
 }

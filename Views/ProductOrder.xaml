@@ -45,16 +45,12 @@
 
 
             <WrapPanel VerticalAlignment="Center" Grid.Column="1">
-                <TextBlock
-                Text="Общая скидка: "
-                FontFamily="{StaticResource pwsFont}"
-                VerticalAlignment="Center">
+                
 
-                </TextBlock>
-                <TextBlock
-                    Text="{Binding DiscountOrder}"
-                    FontFamily="{StaticResource pwsFont}"></TextBlock>
-                <TextBlock Text="%" FontFamily="{StaticResource pwsFont}"></TextBlock>
+                
+                <TextBlock Text="Общая цена без скидки: "></TextBlock>
+                <TextBlock 
+                                               Text="{Binding FullPrice, StringFormat={}{0:C}, ConverterCulture=ru-RU}"></TextBlock>
             </WrapPanel>
             <ComboBox Grid.Column="2"
                       
@@ -277,7 +273,7 @@
                 Content="Назад к товарам"
                 FontFamily="{StaticResource pwsFont}"
                 Command="{Binding Back}"></Button>
-        <Button Grid.Row="3" HorizontalAlignment="Right" Content="Перейти к оформлению"
+        <Button Grid.Row="3" HorizontalAlignment="Right" Content="Оформить заказ"
                 Margin="0 10 10 10" Command="{Binding OrderBut}"></Button>
         <Button Grid.Row="3" HorizontalAlignment="Center" Content="Скачать талон" Command="{Binding Pdf}"></Button>
     </Grid>
